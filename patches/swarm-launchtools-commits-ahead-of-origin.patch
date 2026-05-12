@@ -1,0 +1,78 @@
+diff --git a/launchtools/example-docker-compose.yml b/launchtools/example-docker-compose.yml
+index 35ccd8ad..ad5df299 100644
+--- a/launchtools/example-docker-compose.yml
++++ b/launchtools/example-docker-compose.yml
+@@ -1,5 +1,6 @@
+ services:
+   swarmui:
++    restart: always
+     image: swarmui
+     user: ${HOST_UID:-1000}:${HOST_GID:-1000}
+     cap_drop:
+@@ -14,7 +15,7 @@ services:
+     # network_mode: host
+     volumes:
+       - swarmdata:/SwarmUI/Data
+-      - swarmbackend:/SwarmUI/dlbackend
++      - ./dlbackend/comfy:/SwarmUI/dlbackend
+       - swarmdlnodes:/SwarmUI/src/BuiltinExtensions/ComfyUIBackend/DLNodes
+       - swarmextensions:/SwarmUI/src/Extensions
+       - ./Models:/SwarmUI/Models
+@@ -22,13 +23,17 @@ services:
+       - ./src/BuiltinExtensions/ComfyUIBackend/CustomWorkflows:/SwarmUI/src/BuiltinExtensions/ComfyUIBackend/CustomWorkflows
+     ports:
+       - "7801:7801"
++      - "8188:8188"
++      - "7820:7820"
++      - "7821:7821"
++      - "7822:7822"
+     deploy:
+       resources:
+         reservations:
+           devices:
+             - driver: nvidia
+               # change the count to the number of GPUs you want to use.
+-              count: 1
++              count: 2
+               capabilities: [gpu]
+ volumes:
+   swarmdata:
+diff --git a/launchtools/install-linux.sh b/launchtools/install-linux.sh
+index dba7edc0..4ab7e50f 100644
+--- a/launchtools/install-linux.sh
++++ b/launchtools/install-linux.sh
+@@ -2,7 +2,7 @@
+ 
+ # Ensure correct local path.
+ SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+-cd "$SCRIPT_DIR"
++cd $SCRIPT_DIR
+ 
+ # Accidental run prevention
+ if [ -d "SwarmUI" ]; then
+@@ -26,6 +26,7 @@ wget https://dot.net/v1/dotnet-install.sh -O dotnet-install.sh
+ chmod +x dotnet-install.sh
+ cd ..
+ 
++<<<<<<< HEAD
+ # Note: manual installers that want to avoid home dir, add to both of the below lines: --install-dir "$PWD/.dotnet"
+ ./launchtools/dotnet-install.sh --channel 8.0 --runtime aspnetcore
+ ./launchtools/dotnet-install.sh --channel 8.0
+@@ -34,3 +35,17 @@ rm ./launchtools/dotnet-install.sh
+ 
+ # Launch
+ ./launch-linux.sh "$@"
++=======
++# Note: manual installers that want to avoid home dir, add to both of the below lines: --install-dir $SCRIPT_DIR/.dotnet
++./launchtools/dotnet-install.sh --channel 8.0 --runtime aspnetcore
++./launchtools/dotnet-install.sh --channel 8.0
++
++<<<<<<< Updated upstream
++<<<<<<< Updated upstream
++=======
++=======
++>>>>>>> Stashed changes
++# Launch
++>>>>>>> Stashed changes
++./launch-linux.sh $@
++>>>>>>> c2119607 (jjee)
