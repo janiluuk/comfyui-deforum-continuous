@@ -78,12 +78,12 @@
         }
       ],
       "properties": { "Node name for S&R": "DeforumBaseParamsNode" },
-      "title": "Base params 960×540 (Turbo: euler + sgm_uniform, 6 steps #14)",
+      "title": "Base params 960×540 (Turbo: euler + sgm_uniform; calmer start, #14 steps ramp)",
       "widgets_values": [
         960,
         540,
         "0: (-1)",
-        "random",
+        "fixed",
         "euler",
         "sgm_uniform",
         true,
@@ -118,14 +118,14 @@
         }
       ],
       "properties": { "Node name for S&R": "DeforumDiffusionParamsNode" },
-      "title": "Diffusion (SDXL Turbo preset)",
+      "title": "Diffusion (Turbo: softer start → steady state)",
       "widgets_values": [
-        "0: (0.042)",
-        "0: (0.40)",
-        "0: (1.04)",
+        "0: (0.025), 10: (0.034), 48: (0.042)",
+        "0: (0.40), 2: (0.30), 12: (0.36), 48: (0.40)",
+        "0: (1.0), 8: (1.02), 48: (1.04)",
         "0: (1.0)",
         true,
-        "0: (6)",
+        "0: (10), 6: (8), 24: (6)",
         false,
         "0:(0)",
         false,
@@ -307,8 +307,8 @@
         }
       ],
       "properties": { "Node name for S&R": "ImageSharpen" },
-      "title": "Mild sharpen (Turbo decode cleanup)",
-      "widgets_values": [1, 1.0, 0.22]
+      "title": "Mild sharpen (Turbo decode cleanup; lower 3rd # if halos)",
+      "widgets_values": [1, 1.1, 0.16]
     },
     {
       "id": 21,
@@ -447,8 +447,8 @@
         }
       ],
       "properties": { "Node name for S&R": "PrimitiveString" },
-      "title": "steps_schedule (Turbo: 6)",
-      "widgets_values": ["0: (6)"]
+      "title": "steps_schedule: more steps early (frame 0 is full denoise w/o init)",
+      "widgets_values": ["0: (10), 6: (8), 24: (6)"]
     },
     {
       "id": 15,
@@ -486,7 +486,7 @@
       "mode": 0,
       "properties": { "text": "" },
       "widgets_values": [
-        "QUICK PARAMETERS PANEL\n\n**SDXL Turbo (sd_xl_turbo_1.0_fp16):** **euler + sgm_uniform**, **CFG 1.0**, **6 steps** (#14). **Strength ~0.40**, **noise ~0.042**, **contrast 1.04** (#3). **#23 CLIPSetLastLayer -2** on CLIP before #9. **#22 ImageSharpen** (mild) after #9 before #21. If CLIP looks wrong, bypass #23. If halos, lower #22 alpha (3rd value).\n\n**Resolution:** **960×540** (#2); VAE ÷8 issue → **960×544**. Swarm size must match. **#21** 1× native. Encode: **yuv422p** + **CRF 7** (#10) for sharper chroma at this resolution.\n\n**LoRA:** #1→#9 default; with LoRAs use **#18 CLIP → #23 → #9** (not CLIP straight to #9).\n\nCONTINUE: #19 / #20 / `continue_last.png` / #15 / #8. FPS #11, frames #13."
+        "QUICK PARAMETERS PANEL\n\n**Noisy first frames:** With **no init image**, the sampler uses **full denoise on frame 0** (normal Deforum+Comfy path), then **scheduled strength** on later frames — so the start looks wild until the chain stabilizes. Mitigations here: **more steps early** (#14 `0:(10)` → `6:(8)` → `24:(6)`), **softer noise/contrast ramps** (#3), **gentler strength** on frames 1–2 (`0.30` after frame 0 in schedule), **`fixed` seed** (#2) for calmer first frame. For the **calmest** start, set **#8 use_init = Yes** and put a **neutral 960×540 PNG** at `input/continue_last.png` (or your `init_image` path).\n\n**SDXL Turbo:** euler + sgm_uniform, CFG 1.0, **#23** CLIP -2, **#22** sharpen. **LoRA:** #18 CLIP → #23 → #9 when using #17/#18.\n\n**Resolution / encode:** 960×540 (or 960×544); VHS yuv422p CRF 7. CONTINUE: #19 / #20 / #15 / #8."
       ],
       "color": "#432",
       "bgcolor": "#653"

@@ -1,0 +1,81 @@
+diff --git a/src/BuiltinExtensions/ComfyUIBackend/ComfyUIBackendExtension.cs b/src/BuiltinExtensions/ComfyUIBackend/ComfyUIBackendExtension.cs
+index 92a23982..f110545b 100644
+--- a/src/BuiltinExtensions/ComfyUIBackend/ComfyUIBackendExtension.cs
++++ b/src/BuiltinExtensions/ComfyUIBackend/ComfyUIBackendExtension.cs
+@@ -779,7 +779,7 @@ public class ComfyUIBackendExtension : Extension
+             ));
+         List<string> interpolators = ["RIFE", "FILM", "GIMM-VFI"];
+         VideoPreviewType = T2IParamTypes.Register<string>(new("Video Preview Type", "How to display previews for generating videos.\n'Animate' shows a low-res animated video preview.\n'iterate' shows one frame at a time while it goes.\n'one' displays just the first frame.\n'none' disables previews.",
+-            "animate", IgnoreIf: "animate", FeatureFlag: "comfyui", Group: T2IParamTypes.GroupAdvancedVideo, Permission: Permissions.ParamVideo, IsAdvanced: true, GetValues: (_) => ["animate", "iterate", "one", "none"]
++            "iterate", IgnoreIf: "iterate", FeatureFlag: "comfyui", Group: T2IParamTypes.GroupAdvancedVideo, Permission: Permissions.ParamVideo, IsAdvanced: true, GetValues: (_) => ["animate", "iterate", "one", "none"]
+             ));
+         VideoFrameInterpolationMultiplier = T2IParamTypes.Register<int>(new("Video Frame Interpolation Multiplier", "How many frames to interpolate between each frame in the video.\nHigher values are smoother, but make take significant time to save the output, and may have quality artifacts.",
+             "1", IgnoreIf: "1", Min: 1, Max: 10, Step: 1, FeatureFlag: "frameinterps", Group: T2IParamTypes.GroupAdvancedVideo, Permission: Permissions.ParamVideo, OrderPriority: 32, IsAdvanced: true
+diff --git a/src/wwwroot/js/genpage/helpers/generatehandler.js b/src/wwwroot/js/genpage/helpers/generatehandler.js
+index 95b18ec6..9e588cae 100644
+--- a/src/wwwroot/js/genpage/helpers/generatehandler.js
++++ b/src/wwwroot/js/genpage/helpers/generatehandler.js
+@@ -2,6 +2,9 @@ class GenerateHandler {
+ 
+     constructor() {
+         this.batchesEver = 0;
++        /** Expected image outputs for the active WS request (images × batch size); used for status ETA. */
++        this.activeBatchExpectedImages = 0;
++        this.activeBatchCompletedImages = 0;
+         this.totalGensThisRun = 0;
+         this.totalGenRunTime = 0;
+         this.validateModel = true;
+@@ -51,6 +54,8 @@ class GenerateHandler {
+     }
+ 
+     hadError(msg) {
++        this.activeBatchExpectedImages = 0;
++        this.activeBatchCompletedImages = 0;
+         showError(msg);
+     }
+ 
+@@ -167,6 +172,7 @@ class GenerateHandler {
+             return;
+         }
+         if (data.image) {
++            this.activeBatchCompletedImages++;
+             let timeNow = Date.now();
+             let timeDiff = timeNow - timeLastGenHit[0];
+             timeLastGenHit[0] = timeNow;
+@@ -319,6 +325,10 @@ class GenerateHandler {
+             let discardable = {};
+             let timeLastGenHit = [Date.now()];
+             let actualInput = this.getGenInput(input_overrides, input_preoverrides);
++            let rawImages = Math.max(1, Math.floor(Number(actualInput['images']) || 1));
++            let batchSz = Math.max(1, Math.floor(Number(actualInput['batchsize']) || 1));
++            this.activeBatchExpectedImages = rawImages * batchSz;
++            this.activeBatchCompletedImages = 0;
+             let socket = null;
+             let handleError = e => {
+                 console.log(`Error in GenerateText2ImageWS:`, e, this.interrupted, batch_id);
+diff --git a/src/wwwroot/js/genpage/main.js b/src/wwwroot/js/genpage/main.js
+index 666cb822..2be40ffa 100644
+--- a/src/wwwroot/js/genpage/main.js
++++ b/src/wwwroot/js/genpage/main.js
+@@ -76,6 +76,10 @@ function updateCurrentStatusDirect(data) {
+         num_backends_waiting = data.waiting_backends;
+     }
+     let total = num_waiting_gens + num_models_loading + num_live_gens + num_backends_waiting;
++    if (num_waiting_gens + num_models_loading + num_live_gens + num_backends_waiting == 0) {
++        mainGenHandler.activeBatchExpectedImages = 0;
++        mainGenHandler.activeBatchCompletedImages = 0;
++    }
+     if (isGeneratingPreviews && num_waiting_gens <= getRequiredElementById('usersettings_maxsimulpreviews').value) {
+         total = 0;
+     }
+@@ -89,7 +93,9 @@ function updateCurrentStatusDirect(data) {
+     let timeEstimate = '';
+     if (total > 0 && mainGenHandler.totalGensThisRun > 0) {
+         let avgGenTime = mainGenHandler.totalGenRunTime / mainGenHandler.totalGensThisRun;
+-        let estTime = avgGenTime * total;
++        let remainingByBatch = Math.max(0, (mainGenHandler.activeBatchExpectedImages || 0) - (mainGenHandler.activeBatchCompletedImages || 0));
++        let effectiveTotal = remainingByBatch > 0 ? Math.max(total, remainingByBatch) : total;
++        let estTime = avgGenTime * effectiveTotal;
+         timeEstimate = ` (est. ${durationStringify(estTime)})`;
+     }
+     elem.innerHTML = total == 0 ? (isGeneratingPreviews ? generatingPreviewsText.get() : '') : `${currentGenString(num_waiting_gens, num_models_loading, num_live_gens, num_backends_waiting)} ${timeEstimate}...`;
