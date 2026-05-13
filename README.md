@@ -2,21 +2,31 @@
 
 ComfyUI workflow presets for Deforum-based generative video, optimised for smooth, low-flicker continuous animation.
 
+---
+
 ## Workflows
 
-### `deforum_z_image_turbo_video.json`
+All workflows follow the naming convention **`deforum_video_sequencer_<type>.json`**.  
+Canonical copies live in `swarm/CustomWorkflows/` (auto-loaded by SwarmUI via the volume mount in `swarm/docker-compose.host.yml`).  
+Root-level copies are identical and exist for convenient drag-and-drop into a bare ComfyUI install.
+
+| File | Model family | Steps | Scheduler |
+|---|---|---|---|
+| `deforum_video_sequencer_z_image_turbo.json` | Z-Image Turbo (6B, Alibaba) | 8 | `euler` + `turbo` |
+| `deforum_video_sequencer_flux_schnell.json` | Flux Schnell (12B, BFL) | 4 | `euler` + `simple` |
+| `deforum_video_sequencer_sdxl_turbo.json` | SDXL Turbo (Juggernaut) | 4–8 | `euler_ancestral` + `karras` |
+
+---
+
+### `deforum_video_sequencer_z_image_turbo.json`
 
 A full Deforum animation workflow built around **Z-Image Turbo** — Alibaba's distilled 6B-parameter diffusion model that generates high-quality frames in ~8 steps.
 
-**Purpose:** produce cinematic, continuously flowing generative video with minimal flickering. Each frame is initialised from the previous one, creating a coherent visual stream rather than a series of disconnected images.
-
 **Key features:**
-
-- **Z-Image Turbo split loaders** — uses ComfyUI's native `UNETLoader`, `CLIPLoader` (type `qwen_image`), and `VAELoader` instead of a single checkpoint, matching the model's three-file layout
-- **Anti-flicker defaults** — fixed seed, `euler` + `turbo` scheduler, CFG 1.0, flat 8-step schedule, eased strength/noise ramps, and a very gentle zoom to keep the chain temporally stable
-- **Continuation** — a `WAS_Image_Save` node (unmute to enable) saves the last generated frame to `input/z_image_turbo_continue.png`; toggle `use_init = Yes` in the init-image node to resume from exactly where the previous run ended
-- **Disabled alternative animation nodes** — `DeforumDepthParamsNode` (3D depth warp), `DeforumCadenceParamsNode` (optical-flow tween frames), and `DeforumColorParamsNode` (colour coherence) are wired into the data chain in bypass mode; right-click any one and enable it to activate that technique
-- **ControlNet infrastructure** — `ControlNetLoader` and `DeforumControlNetApply` are present in muted state with a wiring guide; activate them alongside a `DeforumIteratorNode` + `DeforumKSampler` path for per-frame ControlNet guidance
+- **Z-Image Turbo split loaders** — `UNETLoader`, `CLIPLoader` (type `qwen_image`), `VAELoader`
+- **Continuation** — `WAS_Image_Save` (unmute) saves the last frame to `input/z_image_turbo_continue.png`; set `use_init = Yes` in the init-image node to resume seamlessly
+- **Optional animation nodes** — `DeforumDepthParamsNode`, `DeforumCadenceParamsNode`, `DeforumColorParamsNode` are bypassed; right-click → enable to activate
+- **ControlNet infrastructure** — `ControlNetLoader` + `DeforumControlNetApply` are muted; see [ControlNet usage](#controlnet-usage) below
 
 **Required models** (place in the indicated ComfyUI subdirectories):
 
@@ -28,24 +38,32 @@ A full Deforum animation workflow built around **Z-Image Turbo** — Alibaba's d
 
 Download from [Comfy-Org/z\_image\_turbo](https://huggingface.co/Comfy-Org/z_image_turbo).
 
-**Required custom nodes:**
+#### Recommended defaults — Z-Image Turbo
 
-- [deforum-comfy-nodes](https://github.com/XmYx/deforum-comfy-nodes)
-- [ComfyUI-VideoHelperSuite](https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite) (VHS)
-- [was-node-suite-comfyui](https://github.com/WASasquatch/was-node-suite-comfyui) — only needed for the continuation auto-save node
+| Parameter | Recommended value | Notes |
+|---|---|---|
+| **Steps** | `8` | Model sweet-spot; going above 12 rarely helps |
+| **CFG** | `1.0` | Distilled — CFG > 1 produces artefacts |
+| **Sampler** | `euler` | |
+| **Scheduler** | `turbo` | Required for correct noise scaling |
+| **Strength schedule** | `0:(0.65), 12:(0.70), 24:(0.60)` | Lower = more temporal coherence |
+| **Noise schedule** | `0:(0.03), 12:(0.04)` | Keep small to suppress flicker |
+| **Seed** | Fixed (any value) | Random seed causes visible jumps between frames |
+| **Resolution** | `1024×576` (16:9) or `768×768` | Stick to multiples of 64 |
+| **Zoom schedule** | `0:(1.002)` | Very gentle zoom keeps the chain stable |
+| **Frames** | `72–240` | ~3–10 s at 24 fps |
+| **FPS (VHS combine)** | `24` | |
 
-### `deforum_flux_schnell_video.json`
+---
 
-A Deforum animation workflow built around **Flux Schnell** — Black Forest Labs' distilled 12B rectified-flow transformer that generates high-quality images in just **4 steps**.
+### `deforum_video_sequencer_flux_schnell.json`
 
-**Purpose:** produce cinematic, smoothly animated video using Flux's native coherence and prompt fidelity. Because Flux encodes 16-channel latents, the workflow always seeds from an init image (required on first run) so the VAE-encode path is used for every frame — keeping the latent dimensionality correct throughout the animation chain.
+A Deforum animation workflow built around **Flux Schnell** — Black Forest Labs' distilled 12B rectified-flow transformer.
 
 **Key features:**
-
-- **Split loaders** — `UNETLoader` for the diffusion weights, `DualCLIPLoader` (type `flux`) for CLIP-L + T5-XXL text encoders, and `VAELoader` for the Flux AE
-- **4-step distilled settings** — `euler` sampler + `simple` scheduler, CFG 1.0 flat (negatives have no effect at CFG 1), eased strength/noise ramps tuned for Flux's strong prompt fidelity
-- **Init image required** — place any 1024×576 PNG at `ComfyUI/input/flux_schnell_continue.png` before the first run; after each run the `WAS_Image_Save` node (unmute + set output path) overwrites it with the last generated frame for seamless continuation
-- **Same optional nodes** — bypassed depth warp, cadence, and colour-coherence nodes; muted ControlNet infrastructure — all inherited from the Z-Image Turbo preset
+- **Split loaders** — `UNETLoader`, `DualCLIPLoader` (type `flux`), `VAELoader`
+- **Init image required** — place a 1024×576 PNG at `ComfyUI/input/flux_schnell_continue.png` before the first run; `WAS_Image_Save` overwrites it each run for seamless continuation
+- **Same optional nodes** — bypassed depth/cadence/colour-coherence; muted ControlNet infrastructure
 
 **Required models** (place in the indicated ComfyUI subdirectories):
 
@@ -56,12 +74,142 @@ A Deforum animation workflow built around **Flux Schnell** — Black Forest Labs
 | `t5xxl_fp8_e4m3fn.safetensors` | `models/text_encoders/` |
 | `ae.safetensors` | `models/vae/` |
 
-Download from [Comfy-Org/flux\_schnell](https://huggingface.co/Comfy-Org/flux_schnell) (or the Black Forest Labs release). The `ae.safetensors` VAE is shared with Z-Image Turbo.
+Download from [Comfy-Org/flux\_schnell](https://huggingface.co/Comfy-Org/flux_schnell). `ae.safetensors` is shared with Z-Image Turbo.
 
-**Required custom nodes:** same as Z-Image Turbo above.
+**Required custom nodes:** same as Z-Image Turbo (see below).
+
+#### Recommended defaults — Flux Schnell
+
+| Parameter | Recommended value | Notes |
+|---|---|---|
+| **Steps** | `4` | Model minimum; 4 is optimal for Schnell |
+| **CFG** | `1.0` | Distilled — negative prompts have no effect |
+| **Sampler** | `euler` | |
+| **Scheduler** | `simple` | Flux-native; do not use `karras` |
+| **Strength schedule** | `0:(0.75), 12:(0.80), 24:(0.70)` | Flux handles slightly higher strength well |
+| **Noise schedule** | `0:(0.02)` | Flux is very prompt-faithful; keep noise minimal |
+| **Seed** | Fixed | Same reason as Z-Image Turbo |
+| **Resolution** | `1024×576` or `896×512` | Must use VAE-encode path (init image required) |
+| **Zoom schedule** | `0:(1.002)` | |
+| **Frames** | `72–240` | |
+| **FPS (VHS combine)** | `24` | |
+
+> **First-run checklist:** copy any suitable 1024×576 image to `ComfyUI/input/flux_schnell_continue.png` before the first run. Without it the VAE-encode path fails.
 
 ---
 
-### `deforum_v1_video.json` / `deforum_juggernaut_video.json`
+### `deforum_video_sequencer_sdxl_turbo.json`
 
-Older SDXL Turbo–based presets using `sd_xl_turbo_1.0_fp16.safetensors` via `CheckpointLoaderSimple`. Same Deforum animation chain, tuned for SDXL's sampler characteristics.
+Older SDXL Turbo–based preset using `sd_xl_turbo_1.0_fp16.safetensors` (Juggernaut XL variant) via `CheckpointLoaderSimple`. Same core Deforum chain, tuned for SDXL sampler characteristics.
+
+**Required models:**
+
+| File | Folder |
+|---|---|
+| `sd_xl_turbo_1.0_fp16.safetensors` (or Juggernaut XL) | `models/checkpoints/` |
+
+#### Recommended defaults — SDXL Turbo
+
+| Parameter | Recommended value | Notes |
+|---|---|---|
+| **Steps** | `4–8` | SDXL Turbo sweet-spot |
+| **CFG** | `1.0–2.0` | SDXL Turbo is distilled; stay low |
+| **Sampler** | `euler_ancestral` | |
+| **Scheduler** | `karras` | |
+| **Strength schedule** | `0:(0.55), 12:(0.60)` | SDXL is heavier; lower strength = more coherence |
+| **Noise schedule** | `0:(0.04)` | |
+| **Seed** | Fixed | |
+| **Resolution** | `1024×576` or `1024×1024` | SDXL native resolution |
+| **Frames** | `48–120` | SDXL is slower per frame |
+
+---
+
+## ControlNet Usage
+
+All workflows include a **muted** ControlNet block that can be activated to guide each frame with a structural signal (depth, Canny edges, pose, etc.).
+
+### Supported workflows
+
+ControlNet works with Z-Image Turbo and Flux Schnell (both include `ControlNetLoader` + `DeforumControlNetApply` nodes). The SDXL Turbo preset does not include this block by default.
+
+### Step-by-step activation
+
+1. **Download a compatible ControlNet model** and place it in `ComfyUI/models/controlnet/`:
+   - Z-Image Turbo / Flux: use a native Flux ControlNet (e.g. `flux-canny-controlnet-v3.safetensors`) or a compatible SD3/unified model
+   - SDXL: use any SDXL ControlNet (e.g. `controlnet-canny-sdxl-1.0.safetensors`)
+
+2. **Unmute the ControlNetLoader node** — right-click it → **"Remove Mute"** (the node turns from grey to its normal colour).
+
+3. **Set the model filename** — double-click the `ControlNetLoader` widget and select your `.safetensors` file from the dropdown.
+
+4. **Unmute `DeforumControlNetApply`** — same right-click procedure.
+
+5. **Connect the control image source** — the `DeforumControlNetApply` node expects:
+   - `image` input: a control image or the output of a preprocessor node (e.g. `CannyEdgePreprocessor`, `MiDaS-DepthMapPreprocessor`)
+   - `control_net` input: wired from `ControlNetLoader`
+   - `conditioning` input: wired from the positive conditioning output
+
+   For video-to-video guidance, wire the previous frame (from `DeforumIteratorNode` output) into a preprocessor, then into `DeforumControlNetApply`.
+
+6. **Tune the ControlNet strength** in the `DeforumControlNetApply` node:
+
+   | Use case | `strength` | `start_percent` | `end_percent` |
+   |---|---|---|---|
+   | Loose structural guidance | `0.4–0.6` | `0.0` | `0.7` |
+   | Strong edge adherence | `0.7–0.9` | `0.0` | `1.0` |
+   | Late-pass refinement only | `0.5–0.8` | `0.3` | `0.9` |
+
+7. **Verify the wiring** — the control signal must feed into the sampler's conditioning path (`DeforumKSampler`), not the bypass path used by `DeforumSingleSampleNode`. Confirm by tracing the orange conditioning wires.
+
+### Common preprocessors
+
+| Effect | Node |
+|---|---|
+| Canny edges | `CannyEdgePreprocessor` |
+| Depth map | `MiDaS-DepthMapPreprocessor` or `ZoeDepthMapPreprocessor` |
+| Human pose | `DWPreprocessor` |
+| Soft edges | `TEEDPreprocessor` |
+| Line art | `LineArtPreprocessor` |
+
+Preprocessor nodes are provided by [comfyui_controlnet_aux](https://github.com/Fannovel16/comfyui_controlnet_aux).
+
+---
+
+## Required custom nodes (all workflows)
+
+- [deforum-comfy-nodes](https://github.com/XmYx/deforum-comfy-nodes)
+- [ComfyUI-VideoHelperSuite](https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite) (VHS)
+- [was-node-suite-comfyui](https://github.com/WASasquatch/was-node-suite-comfyui) — only for the continuation auto-save node
+- [comfyui_controlnet_aux](https://github.com/Fannovel16/comfyui_controlnet_aux) — only when using ControlNet preprocessors
+
+---
+
+## SwarmUI setup
+
+### Quick start
+
+```bash
+cd swarm/launchtools
+bash install-linux.sh
+```
+
+Copy your desired workflow(s) into SwarmUI's custom-workflows directory or use the Docker volume mount in `swarm/docker-compose.host.yml` which binds `./CustomWorkflows` automatically.
+
+See `swarm/scripts/README.md` for the interactive workflow manager and API-based runner.
+
+### Applying patches
+
+The `patches/` directory contains SwarmUI source patches that improve video generation UX:
+
+| Patch | What it does |
+|---|---|
+| `swarm-ui-eta-video-preview.patch` | Sets default video preview to `iterate` mode; fixes ETA counter for multi-image batches |
+| `swarm-launchtools.patch` | Docker compose: `restart: always`, bind-mount backend, extra ports, multi-GPU; install script path fixes |
+
+Apply both with one command:
+
+```bash
+bash patches/apply-patches.sh /path/to/SwarmUI
+```
+
+See `patches/apply-patches.sh --help` for options.
