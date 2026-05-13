@@ -2,6 +2,8 @@
 
 ComfyUI workflow presets for Deforum-based generative video, optimised for smooth, low-flicker continuous animation.
 
+**Default branch:** `main`. Open pull requests against `main` (this repository does not use a separate `master` branch on GitHub).
+
 ---
 
 ## Workflows
