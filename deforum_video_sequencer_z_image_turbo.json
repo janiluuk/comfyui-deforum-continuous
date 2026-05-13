@@ -31,7 +31,7 @@
       "properties": {
         "Node name for S&R": "UNETLoader"
       },
-      "title": "Z-Image Turbo — diffusion_models/z_image_turbo_bf16…",
+      "title": "Z-Image Turbo \u2014 diffusion_models/z_image_turbo_bf16\u2026",
       "widgets_values": [
         "z_image_turbo_bf16.safetensors",
         "default"
@@ -66,7 +66,7 @@
       "properties": {
         "Node name for S&R": "CLIPLoader"
       },
-      "title": "Qwen TE — text_encoders/qwen_3_4b… (type: qwen_image)",
+      "title": "Qwen TE \u2014 text_encoders/qwen_3_4b\u2026 (type: qwen_image)",
       "widgets_values": [
         "qwen_3_4b.safetensors",
         "qwen_image",
@@ -108,10 +108,10 @@
       "properties": {
         "Node name for S&R": "DeforumBaseParamsNode"
       },
-      "title": "Base 960×544 · euler + turbo sched · fixed seed",
+      "title": "Base 1024\u00d7576 \u00b7 euler + turbo \u00b7 fixed seed",
       "widgets_values": [
-        960,
-        544,
+        1024,
+        576,
         "0: (-1)",
         "fixed",
         "euler",
@@ -164,10 +164,10 @@
       "properties": {
         "Node name for S&R": "DeforumDiffusionParamsNode"
       },
-      "title": "Diffusion · Z turbo: CFG 1, flat contrast, eased strength",
+      "title": "Diffusion \u00b7 Z-Image Turbo: CFG 1, 8 steps, strength 0.65\u21920.70",
       "widgets_values": [
-        "0:(0.020), 12:(0.028), 48:(0.034)",
-        "0:(0.52), 1:(0.44), 2:(0.40), 4:(0.48), 48:(0.52)",
+        "0:(0.030), 12:(0.040)",
+        "0:(0.65), 12:(0.70), 24:(0.62)",
         "0:(1.0)",
         "0:(1.0)",
         true,
@@ -397,7 +397,7 @@
         "",
         false
       ],
-      "title": "Init image (use_init=No → fresh start; Yes → continue from last frame)"
+      "title": "Init image (use_init=No \u2192 fresh start; Yes \u2192 continue from last frame)"
     },
     {
       "id": 9,
@@ -529,7 +529,7 @@
       "properties": {
         "Node name for S&R": "ImageScaleBy"
       },
-      "title": "Native res pass-through (1×) — 960×544",
+      "title": "Native res pass-through (1\u00d7) \u2014 960\u00d7544",
       "widgets_values": [
         "lanczos",
         1
@@ -789,7 +789,7 @@
         "text": ""
       },
       "widgets_values": [
-        "QUICK PANEL · Z-IMAGE TURBO\n\nMODELS:  #1 diffusion_models/z_image_turbo_bf16.safetensors  |  #23 text_encoders/qwen_3_4b.safetensors (CLIPLoader type: qwen_image)  |  #24 vae/ae.safetensors\n\nANTI-FLICKER:  fixed seed · euler + turbo scheduler · CFG 1.0 · 8 steps flat · eased strength/noise · slow zoom\n\nCONTINUATION — three steps:\n  1. Unmute #28 (WAS_Image_Save). Set its output_path to your ComfyUI input/ directory (e.g. /home/user/ComfyUI/input). Leave filename_prefix as z_image_turbo_continue, overwrite_mode prefix_as_filename.\n  2. Queue a run. The last frame is saved to input/z_image_turbo_continue.png automatically.\n  3. Set use_init = Yes in #8 to continue from that frame. Toggle back to No for a fresh start.\n  NOTE: without WAS Node Suite installed, right-click the #20 preview → save manually → drop in input/z_image_turbo_continue.png.\n\nALTERNATIVE ANIM NODES (disabled, in row below):  #25 Depth Warp (3D mode) · #26 Diffusion Cadence (smoother inter-frame motion) · #27 Color Coherence (stable colours). Right-click → enable to activate.\n\nCONTROLNET (muted, bottom-right):  #29 ControlNetLoader + #30 DeforumControlNetApply. Unmute and wire: CLIPTextEncode → #30 conditioning input · control image → #30 image input. ⚠️ DeforumSingleSampleNode (#9) builds its own conditioning internally — ControlNet output must feed a DeforumKSampler/iterator-based path, not #9 directly."
+        "QUICK PANEL \u00b7 Z-IMAGE TURBO\n\nMODELS:  #1 diffusion_models/z_image_turbo_bf16.safetensors  |  #23 text_encoders/qwen_3_4b.safetensors (CLIPLoader type: qwen_image)  |  #24 vae/ae.safetensors\n\nANTI-FLICKER:  fixed seed \u00b7 euler + turbo scheduler \u00b7 CFG 1.0 \u00b7 8 steps flat \u00b7 eased strength/noise \u00b7 slow zoom\n\nCONTINUATION \u2014 three steps:\n  1. Unmute #28 (WAS_Image_Save). Set its output_path to your ComfyUI input/ directory (e.g. /home/user/ComfyUI/input). Leave filename_prefix as z_image_turbo_continue, overwrite_mode prefix_as_filename.\n  2. Queue a run. The last frame is saved to input/z_image_turbo_continue.png automatically.\n  3. Set use_init = Yes in #8 to continue from that frame. Toggle back to No for a fresh start.\n  NOTE: without WAS Node Suite installed, right-click the #20 preview \u2192 save manually \u2192 drop in input/z_image_turbo_continue.png.\n\nALTERNATIVE ANIM NODES (disabled, in row below):  #25 Depth Warp (3D mode) \u00b7 #26 Diffusion Cadence (smoother inter-frame motion) \u00b7 #27 Color Coherence (stable colours). Right-click \u2192 enable to activate.\n\nCONTROLNET (muted, bottom-right):  #29 ControlNetLoader + #30 DeforumControlNetApply. Unmute and wire: CLIPTextEncode \u2192 #30 conditioning input \u00b7 control image \u2192 #30 image input. \u26a0\ufe0f DeforumSingleSampleNode (#9) builds its own conditioning internally \u2014 ControlNet output must feed a DeforumKSampler/iterator-based path, not #9 directly."
       ],
       "color": "#432",
       "bgcolor": "#653"
@@ -839,7 +839,7 @@
       "properties": {
         "Node name for S&R": "LoraLoader"
       },
-      "title": "LoRA A (optional — MODEL #17→#18→#9; CLIP ends at #23→#9)",
+      "title": "LoRA A (optional \u2014 MODEL #17\u2192#18\u2192#9; CLIP ends at #23\u2192#9)",
       "widgets_values": [
         "placeholder.safetensors",
         0,
@@ -891,7 +891,7 @@
       "properties": {
         "Node name for S&R": "LoraLoader"
       },
-      "title": "LoRA B (optional — MODEL chain; CLIP #23→#9)",
+      "title": "LoRA B (optional \u2014 MODEL chain; CLIP #23\u2192#9)",
       "widgets_values": [
         "placeholder.safetensors",
         0,
@@ -966,7 +966,7 @@
       "properties": {
         "Node name for S&R": "SaveImage"
       },
-      "title": "Last frame preview (right-click → Save to input/ for continuation)",
+      "title": "Last frame preview (right-click \u2192 Save to input/ for continuation)",
       "widgets_values": []
     },
     {
@@ -998,7 +998,7 @@
       "properties": {
         "Node name for S&R": "VAELoader"
       },
-      "title": "Z AE VAE — vae/ae.safetensors (Flux-compatible AE)",
+      "title": "Z AE VAE \u2014 vae/ae.safetensors (Flux-compatible AE)",
       "widgets_values": [
         "ae.safetensors"
       ]
@@ -1038,7 +1038,7 @@
       "properties": {
         "Node name for S&R": "DeforumDepthParamsNode"
       },
-      "title": "3D Depth Warp (disabled — enable → switch AnimParams to 3D first)",
+      "title": "3D Depth Warp (disabled \u2014 enable \u2192 switch AnimParams to 3D first)",
       "widgets_values": [
         true,
         "Zoe",
@@ -1083,7 +1083,7 @@
       "properties": {
         "Node name for S&R": "DeforumCadenceParamsNode"
       },
-      "title": "Diffusion Cadence (disabled — cadence=2+ adds smoother optical-flow tween frames)",
+      "title": "Diffusion Cadence (disabled \u2014 cadence=2+ adds smoother optical-flow tween frames)",
       "widgets_values": [
         1,
         "None",
@@ -1128,7 +1128,7 @@
       "properties": {
         "Node name for S&R": "DeforumColorParamsNode"
       },
-      "title": "Color Coherence (disabled — LAB recommended; keeps palette stable across frames)",
+      "title": "Color Coherence (disabled \u2014 LAB recommended; keeps palette stable across frames)",
       "widgets_values": [
         "None",
         "",
@@ -1162,7 +1162,7 @@
       "properties": {
         "Node name for S&R": "WAS_Image_Save"
       },
-      "title": "Continue: save last frame → input/ (unmute + set output_path)",
+      "title": "Continue: save last frame \u2192 input/ (unmute + set output_path)",
       "widgets_values": [
         "",
         "z_image_turbo_continue",
@@ -1208,7 +1208,7 @@
       "properties": {
         "Node name for S&R": "ControlNetLoader"
       },
-      "title": "ControlNet model (muted — wire to #30 when ready)",
+      "title": "ControlNet model (muted \u2014 wire to #30 when ready)",
       "widgets_values": [
         "put_your_controlnet.safetensors"
       ]
@@ -1257,7 +1257,7 @@
       "properties": {
         "Node name for S&R": "DeforumControlNetApply"
       },
-      "title": "Apply ControlNet (muted — needs CONDITIONING from CLIPTextEncode + KSampler path)",
+      "title": "Apply ControlNet (muted \u2014 needs CONDITIONING from CLIPTextEncode + KSampler path)",
       "widgets_values": [
         1.0
       ]
@@ -1280,7 +1280,7 @@
         "text": ""
       },
       "widgets_values": [
-        "CONTROLNET WIRING GUIDE\n#29 ControlNetLoader  →  loads the ControlNet model.\n#30 DeforumControlNetApply  →  conditioning input: CLIPTextEncode(CLIP→text) | control_net: #29 | image: LoadImage / Canny preprocessor\nOutput CONDITIONING feeds a DeforumKSampler (iterator path). ⚠️ Cannot inject into DeforumSingleSampleNode #9 — that node builds its own conditioning internally.\nIterator path: DeforumIteratorNode → DeforumConditioningBlendNode → #30 → DeforumKSampler → VAEDecode → output"
+        "CONTROLNET WIRING GUIDE\n#29 ControlNetLoader  \u2192  loads the ControlNet model.\n#30 DeforumControlNetApply  \u2192  conditioning input: CLIPTextEncode(CLIP\u2192text) | control_net: #29 | image: LoadImage / Canny preprocessor\nOutput CONDITIONING feeds a DeforumKSampler (iterator path). \u26a0\ufe0f Cannot inject into DeforumSingleSampleNode #9 \u2014 that node builds its own conditioning internally.\nIterator path: DeforumIteratorNode \u2192 DeforumConditioningBlendNode \u2192 #30 \u2192 DeforumKSampler \u2192 VAEDecode \u2192 output"
       ],
       "color": "#244",
       "bgcolor": "#366"
@@ -1328,7 +1328,7 @@
           "shape": 3
         }
       ],
-      "title": "Load previous video (set path → output/z_image_turbo_deforum_00001.mp4)",
+      "title": "Load previous video (set path \u2192 output/z_image_turbo_deforum_00001.mp4)",
       "properties": {
         "Node name for S&R": "VHS_LoadVideo"
       },
@@ -1434,7 +1434,7 @@
           "shape": 3
         }
       ],
-      "title": "Merged output → z_image_turbo_deforum_merged",
+      "title": "Merged output \u2192 z_image_turbo_deforum_merged",
       "properties": {
         "Node name for S&R": "VHS_VideoCombine"
       },
@@ -1676,7 +1676,7 @@
   ],
   "groups": [
     {
-      "title": "QUICK PARAMETERS · Z-Image Turbo · 960×544 · euler/turbo · 8 steps · smooth motion",
+      "title": "QUICK PARAMETERS \u00b7 Z-Image Turbo \u00b7 960\u00d7544 \u00b7 euler/turbo \u00b7 8 steps \u00b7 smooth motion",
       "bounding": [
         5,
         475,
@@ -1686,7 +1686,7 @@
       "color": "#264"
     },
     {
-      "title": "ALTERNATIVE ANIM TECHNIQUES (all disabled/bypassed — right-click → enable to activate)",
+      "title": "ALTERNATIVE ANIM TECHNIQUES (all disabled/bypassed \u2014 right-click \u2192 enable to activate)",
       "bounding": [
         370,
         1085,
@@ -1696,7 +1696,7 @@
       "color": "#333"
     },
     {
-      "title": "CONTROLNET INFRASTRUCTURE (muted — see note #31 for wiring guide)",
+      "title": "CONTROLNET INFRASTRUCTURE (muted \u2014 see note #31 for wiring guide)",
       "bounding": [
         1600,
         740,
@@ -1706,7 +1706,7 @@
       "color": "#334"
     },
     {
-      "title": "VIDEO MERGE  ·  To enable: (1) unmute LoadVideo + set filename  (2) unmute ImageBatch  (3) unmute merged VHS_VideoCombine",
+      "title": "VIDEO MERGE  \u00b7  To enable: (1) unmute LoadVideo + set filename  (2) unmute ImageBatch  (3) unmute merged VHS_VideoCombine",
       "bounding": [
         1840,
         720,

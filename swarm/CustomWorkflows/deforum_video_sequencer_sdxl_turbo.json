@@ -5,8 +5,14 @@
     {
       "id": 1,
       "type": "CheckpointLoaderSimple",
-      "pos": [50, 50],
-      "size": [315, 98],
+      "pos": [
+        50,
+        50
+      ],
+      "size": [
+        315,
+        98
+      ],
       "flags": {},
       "order": 0,
       "mode": 0,
@@ -14,71 +20,115 @@
         {
           "name": "MODEL",
           "type": "MODEL",
-          "links": [1],
+          "links": [
+            1
+          ],
           "shape": 3,
           "slot_index": 0
         },
         {
           "name": "CLIP",
           "type": "CLIP",
-          "links": [2],
+          "links": [
+            2
+          ],
           "shape": 3,
           "slot_index": 1
         },
         {
           "name": "VAE",
           "type": "VAE",
-          "links": [3],
+          "links": [
+            3
+          ],
           "shape": 3,
           "slot_index": 2
         }
       ],
-      "properties": { "Node name for S&R": "CheckpointLoaderSimple" },
+      "properties": {
+        "Node name for S&R": "CheckpointLoaderSimple"
+      },
       "title": "SDXL Turbo checkpoint",
-      "widgets_values": ["SDXL/sd_xl_turbo_1.0_fp16.safetensors"]
+      "widgets_values": [
+        "SDXL/sd_xl_turbo_1.0_fp16.safetensors"
+      ]
     },
     {
       "id": 23,
       "type": "CLIPSetLastLayer",
-      "pos": [380, 50],
-      "size": [380, 60],
+      "pos": [
+        380,
+        50
+      ],
+      "size": [
+        380,
+        60
+      ],
       "flags": {},
       "order": 1,
       "mode": 0,
-      "inputs": [{ "name": "clip", "type": "CLIP", "link": 2 }],
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 2
+        }
+      ],
       "outputs": [
         {
           "name": "CLIP",
           "type": "CLIP",
-          "links": [23],
+          "links": [
+            23
+          ],
           "shape": 3,
           "slot_index": 0
         }
       ],
-      "properties": { "Node name for S&R": "CLIPSetLastLayer" },
+      "properties": {
+        "Node name for S&R": "CLIPSetLastLayer"
+      },
       "title": "SDXL: stop CLIP at -2 (clearer prompts)",
-      "widgets_values": [-2]
+      "widgets_values": [
+        -2
+      ]
     },
     {
       "id": 2,
       "type": "DeforumBaseParamsNode",
-      "pos": [50, 200],
-      "size": [317.4, 250],
+      "pos": [
+        50,
+        200
+      ],
+      "size": [
+        317.4,
+        250
+      ],
       "flags": {},
       "order": 2,
       "mode": 0,
-      "inputs": [{ "name": "deforum_data", "type": "deforum_data", "link": null }],
+      "inputs": [
+        {
+          "name": "deforum_data",
+          "type": "deforum_data",
+          "link": null
+        }
+      ],
       "outputs": [
         {
           "name": "deforum_data",
           "type": "deforum_data",
-          "links": [4],
+          "links": [
+            4
+          ],
           "shape": 3,
           "slot_index": 0
         }
       ],
-      "properties": { "Node name for S&R": "DeforumBaseParamsNode" },
-      "title": "Base params 960×540 (Turbo: euler + sgm_uniform; calmer start, #14 steps ramp)",
+      "properties": {
+        "Node name for S&R": "DeforumBaseParamsNode"
+      },
+      "title": "Base 960\u00d7540 \u00b7 euler + sgm_uniform \u00b7 fixed seed \u00b7 4-step turbo",
       "widgets_values": [
         960,
         540,
@@ -94,38 +144,54 @@
     {
       "id": 3,
       "type": "DeforumDiffusionParamsNode",
-      "pos": [60, 888],
-      "size": [300, 280],
+      "pos": [
+        60,
+        888
+      ],
+      "size": [
+        300,
+        280
+      ],
       "flags": {},
       "order": 3,
       "mode": 0,
       "inputs": [
-        { "name": "deforum_data", "type": "deforum_data", "link": 4 },
+        {
+          "name": "deforum_data",
+          "type": "deforum_data",
+          "link": 4
+        },
         {
           "name": "steps_schedule",
           "type": "STRING",
           "link": 14,
-          "widget": { "name": "steps_schedule" }
+          "widget": {
+            "name": "steps_schedule"
+          }
         }
       ],
       "outputs": [
         {
           "name": "deforum_data",
           "type": "deforum_data",
-          "links": [5],
+          "links": [
+            5
+          ],
           "shape": 3,
           "slot_index": 0
         }
       ],
-      "properties": { "Node name for S&R": "DeforumDiffusionParamsNode" },
-      "title": "Diffusion (Turbo: softer start → steady state)",
+      "properties": {
+        "Node name for S&R": "DeforumDiffusionParamsNode"
+      },
+      "title": "Diffusion \u00b7 SDXL Turbo: CFG 1.0, 4 steps, strength 0.55\u21920.60",
       "widgets_values": [
-        "0: (0.025), 10: (0.034), 48: (0.042)",
-        "0: (0.40), 2: (0.30), 12: (0.36), 48: (0.40)",
-        "0: (1.0), 8: (1.02), 48: (1.04)",
+        "0:(0.040)",
+        "0:(0.55), 12:(0.60)",
+        "0:(1.0)",
         "0: (1.0)",
         true,
-        "0: (10), 6: (8), 24: (6)",
+        "0:(4)",
         false,
         "0:(0)",
         false,
@@ -135,51 +201,87 @@
     {
       "id": 4,
       "type": "DeforumAnimParamsNode",
-      "pos": [400, 888],
-      "size": [317.4, 106],
+      "pos": [
+        400,
+        888
+      ],
+      "size": [
+        317.4,
+        106
+      ],
       "flags": {},
       "order": 4,
       "mode": 0,
       "inputs": [
-        { "name": "deforum_data", "type": "deforum_data", "link": 5 },
+        {
+          "name": "deforum_data",
+          "type": "deforum_data",
+          "link": 5
+        },
         {
           "name": "max_frames",
           "type": "INT",
           "link": 13,
-          "widget": { "name": "max_frames" }
+          "widget": {
+            "name": "max_frames"
+          }
         }
       ],
       "outputs": [
         {
           "name": "deforum_data",
           "type": "deforum_data",
-          "links": [6],
+          "links": [
+            6
+          ],
           "shape": 3,
           "slot_index": 0
         }
       ],
-      "properties": { "Node name for S&R": "DeforumAnimParamsNode" },
-      "widgets_values": ["2D", 48, "wrap"]
+      "properties": {
+        "Node name for S&R": "DeforumAnimParamsNode"
+      },
+      "widgets_values": [
+        "2D",
+        48,
+        "wrap"
+      ]
     },
     {
       "id": 5,
       "type": "DeforumTranslationParamsNode",
-      "pos": [790, 200],
-      "size": [340, 280],
+      "pos": [
+        790,
+        200
+      ],
+      "size": [
+        340,
+        280
+      ],
       "flags": {},
       "order": 5,
       "mode": 0,
-      "inputs": [{ "name": "deforum_data", "type": "deforum_data", "link": 6 }],
+      "inputs": [
+        {
+          "name": "deforum_data",
+          "type": "deforum_data",
+          "link": 6
+        }
+      ],
       "outputs": [
         {
           "name": "deforum_data",
           "type": "deforum_data",
-          "links": [7],
+          "links": [
+            7
+          ],
           "shape": 3,
           "slot_index": 0
         }
       ],
-      "properties": { "Node name for S&R": "DeforumTranslationParamsNode" },
+      "properties": {
+        "Node name for S&R": "DeforumTranslationParamsNode"
+      },
       "widgets_values": [
         "0:(0)",
         "0:(1.0025+0.002*sin(1.25*3.14*t/30))",
@@ -196,22 +298,38 @@
     {
       "id": 6,
       "type": "DeforumPromptNode",
-      "pos": [1180, 200],
-      "size": [400, 200],
+      "pos": [
+        1180,
+        200
+      ],
+      "size": [
+        400,
+        200
+      ],
       "flags": {},
       "order": 6,
       "mode": 0,
-      "inputs": [{ "name": "deforum_data", "type": "deforum_data", "link": 7 }],
+      "inputs": [
+        {
+          "name": "deforum_data",
+          "type": "deforum_data",
+          "link": 7
+        }
+      ],
       "outputs": [
         {
           "name": "deforum_data",
           "type": "deforum_data",
-          "links": [8],
+          "links": [
+            8
+          ],
           "shape": 3,
           "slot_index": 0
         }
       ],
-      "properties": { "Node name for S&R": "DeforumPromptNode" },
+      "properties": {
+        "Node name for S&R": "DeforumPromptNode"
+      },
       "widgets_values": [
         "0:'cinematic futuristic neon city, smooth camera motion, atmospheric haze, volumetric lighting'"
       ]
@@ -219,22 +337,38 @@
     {
       "id": 7,
       "type": "DeforumAppendNode",
-      "pos": [1620, 200],
-      "size": [380, 220],
+      "pos": [
+        1620,
+        200
+      ],
+      "size": [
+        380,
+        220
+      ],
       "flags": {},
       "order": 7,
       "mode": 0,
-      "inputs": [{ "name": "deforum_data", "type": "deforum_data", "link": 8 }],
+      "inputs": [
+        {
+          "name": "deforum_data",
+          "type": "deforum_data",
+          "link": 8
+        }
+      ],
       "outputs": [
         {
           "name": "deforum_data",
           "type": "deforum_data",
-          "links": [9],
+          "links": [
+            9
+          ],
           "shape": 3,
           "slot_index": 0
         }
       ],
-      "properties": { "Node name for S&R": "DeforumAppendNode" },
+      "properties": {
+        "Node name for S&R": "DeforumAppendNode"
+      },
       "widgets_values": [
         "blurry, low quality, distorted",
         1,
@@ -245,110 +379,219 @@
     {
       "id": 8,
       "type": "DeforumImageInitParamsNode",
-      "pos": [1600, 520],
-      "size": [320, 150],
+      "pos": [
+        1600,
+        520
+      ],
+      "size": [
+        320,
+        150
+      ],
       "flags": {},
       "order": 8,
       "mode": 0,
-      "inputs": [{ "name": "deforum_data", "type": "deforum_data", "link": 9 }],
+      "inputs": [
+        {
+          "name": "deforum_data",
+          "type": "deforum_data",
+          "link": 9
+        }
+      ],
       "outputs": [
         {
           "name": "deforum_data",
           "type": "deforum_data",
-          "links": [10],
+          "links": [
+            10
+          ],
           "shape": 3,
           "slot_index": 0
         }
       ],
-      "properties": { "Node name for S&R": "DeforumImageInitParamsNode" },
-      "widgets_values": [true, "continue_last.png", "", false]
+      "properties": {
+        "Node name for S&R": "DeforumImageInitParamsNode"
+      },
+      "widgets_values": [
+        true,
+        "continue_last.png",
+        "",
+        false
+      ]
     },
     {
       "id": 9,
       "type": "DeforumSingleSampleNode",
-      "pos": [2040, 280],
-      "size": [240, 120],
+      "pos": [
+        2040,
+        280
+      ],
+      "size": [
+        240,
+        120
+      ],
       "flags": {},
       "order": 9,
       "mode": 0,
       "inputs": [
-        { "name": "deforum_data", "type": "deforum_data", "link": 10 },
-        { "name": "model", "type": "MODEL", "link": 1 },
-        { "name": "clip", "type": "CLIP", "link": 23 },
-        { "name": "vae", "type": "VAE", "link": 3 }
+        {
+          "name": "deforum_data",
+          "type": "deforum_data",
+          "link": 10
+        },
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 1
+        },
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 23
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": 3
+        }
       ],
       "outputs": [
         {
           "name": "IMAGE",
           "type": "IMAGE",
-          "links": [21],
+          "links": [
+            21
+          ],
           "shape": 3,
           "slot_index": 0
         }
       ],
-      "properties": { "Node name for S&R": "DeforumSingleSampleNode" }
+      "properties": {
+        "Node name for S&R": "DeforumSingleSampleNode"
+      }
     },
     {
       "id": 22,
       "type": "ImageSharpen",
-      "pos": [2100, 280],
-      "size": [320, 106],
+      "pos": [
+        2100,
+        280
+      ],
+      "size": [
+        320,
+        106
+      ],
       "flags": {},
       "order": 10,
       "mode": 0,
-      "inputs": [{ "name": "image", "type": "IMAGE", "link": 21 }],
+      "inputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 21
+        }
+      ],
       "outputs": [
         {
           "name": "IMAGE",
           "type": "IMAGE",
-          "links": [22],
+          "links": [
+            22
+          ],
           "shape": 3,
           "slot_index": 0
         }
       ],
-      "properties": { "Node name for S&R": "ImageSharpen" },
+      "properties": {
+        "Node name for S&R": "ImageSharpen"
+      },
       "title": "Mild sharpen (Turbo decode cleanup; lower 3rd # if halos)",
-      "widgets_values": [1, 1.1, 0.16]
+      "widgets_values": [
+        1,
+        1.1,
+        0.16
+      ]
     },
     {
       "id": 21,
       "type": "ImageScaleBy",
-      "pos": [2160, 280],
-      "size": [320, 82],
+      "pos": [
+        2160,
+        280
+      ],
+      "size": [
+        320,
+        82
+      ],
       "flags": {},
       "order": 11,
       "mode": 0,
-      "inputs": [{ "name": "image", "type": "IMAGE", "link": 22 }],
+      "inputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 22
+        }
+      ],
       "outputs": [
         {
           "name": "IMAGE",
           "type": "IMAGE",
-          "links": [11, 19],
+          "links": [
+            11,
+            19
+          ],
           "shape": 3,
           "slot_index": 0
         }
       ],
-      "properties": { "Node name for S&R": "ImageScaleBy" },
-      "title": "Native res pass-through (1×) — encode at 960×540",
-      "widgets_values": ["lanczos", 1]
+      "properties": {
+        "Node name for S&R": "ImageScaleBy"
+      },
+      "title": "Native res pass-through (1\u00d7) \u2014 encode at 960\u00d7540",
+      "widgets_values": [
+        "lanczos",
+        1
+      ]
     },
     {
       "id": 10,
       "type": "VHS_VideoCombine",
-      "pos": [2320, 280],
-      "size": [350, 320],
+      "pos": [
+        2320,
+        280
+      ],
+      "size": [
+        350,
+        320
+      ],
       "flags": {},
       "order": 12,
       "mode": 0,
       "inputs": [
-        { "name": "images", "type": "IMAGE", "link": 11 },
-        { "name": "audio", "type": "AUDIO", "link": null, "shape": 7 },
-        { "name": "meta_batch", "type": "VHS_BatchManager", "link": null, "shape": 7 },
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 11
+        },
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "link": null,
+          "shape": 7
+        },
+        {
+          "name": "meta_batch",
+          "type": "VHS_BatchManager",
+          "link": null,
+          "shape": 7
+        },
         {
           "name": "frame_rate",
           "type": "FLOAT",
           "link": 12,
-          "widget": { "name": "frame_rate" }
+          "widget": {
+            "name": "frame_rate"
+          }
         }
       ],
       "outputs": [
@@ -359,7 +602,9 @@
           "shape": 3
         }
       ],
-      "properties": { "Node name for S&R": "VHS_VideoCombine" },
+      "properties": {
+        "Node name for S&R": "VHS_VideoCombine"
+      },
       "widgets_values": {
         "frame_rate": 24,
         "loop_count": 0,
@@ -371,14 +616,23 @@
         "trim_to_audio": false,
         "pingpong": false,
         "save_output": true,
-        "videopreview": { "hidden": false, "paused": false }
+        "videopreview": {
+          "hidden": false,
+          "paused": false
+        }
       }
     },
     {
       "id": 11,
       "type": "PrimitiveNode",
-      "pos": [60, 700],
-      "size": [210, 82],
+      "pos": [
+        60,
+        700
+      ],
+      "size": [
+        210,
+        82
+      ],
       "flags": {},
       "order": 13,
       "mode": 0,
@@ -387,32 +641,58 @@
         {
           "name": "FLOAT",
           "type": "FLOAT",
-          "links": [12],
-          "widget": { "name": "frame_rate" },
+          "links": [
+            12
+          ],
+          "widget": {
+            "name": "frame_rate"
+          },
           "slot_index": 0
         }
       ],
-      "properties": { "Run widget replace on values": false },
-      "widgets_values": [24, "fixed"]
+      "properties": {
+        "Run widget replace on values": false
+      },
+      "widgets_values": [
+        24,
+        "fixed"
+      ]
     },
     {
       "id": 12,
       "type": "PrimitiveNode",
-      "pos": [280, 700],
-      "size": [210, 82],
+      "pos": [
+        280,
+        700
+      ],
+      "size": [
+        210,
+        82
+      ],
       "flags": {},
       "order": 14,
       "mode": 0,
       "inputs": [],
       "outputs": [],
-      "properties": { "Run widget replace on values": false },
-      "widgets_values": [2, "fixed"]
+      "properties": {
+        "Run widget replace on values": false
+      },
+      "widgets_values": [
+        2,
+        "fixed"
+      ]
     },
     {
       "id": 13,
       "type": "PrimitiveNode",
-      "pos": [740, 900],
-      "size": [210, 82],
+      "pos": [
+        740,
+        900
+      ],
+      "size": [
+        210,
+        82
+      ],
       "flags": {},
       "order": 15,
       "mode": 0,
@@ -421,19 +701,34 @@
         {
           "name": "INT",
           "type": "INT",
-          "links": [13],
-          "widget": { "name": "max_frames" },
+          "links": [
+            13
+          ],
+          "widget": {
+            "name": "max_frames"
+          },
           "slot_index": 0
         }
       ],
-      "properties": { "Run widget replace on values": false },
-      "widgets_values": [48, "fixed"]
+      "properties": {
+        "Run widget replace on values": false
+      },
+      "widgets_values": [
+        48,
+        "fixed"
+      ]
     },
     {
       "id": 14,
       "type": "PrimitiveString",
-      "pos": [60, 798],
-      "size": [520, 72],
+      "pos": [
+        60,
+        798
+      ],
+      "size": [
+        520,
+        72
+      ],
       "flags": {},
       "order": 16,
       "mode": 0,
@@ -442,19 +737,31 @@
         {
           "name": "output",
           "type": "STRING",
-          "links": [14],
+          "links": [
+            14
+          ],
           "slot_index": 0
         }
       ],
-      "properties": { "Node name for S&R": "PrimitiveString" },
+      "properties": {
+        "Node name for S&R": "PrimitiveString"
+      },
       "title": "steps_schedule: more steps early (frame 0 is full denoise w/o init)",
-      "widgets_values": ["0: (10), 6: (8), 24: (6)"]
+      "widgets_values": [
+        "0: (10), 6: (8), 24: (6)"
+      ]
     },
     {
       "id": 15,
       "type": "LoadImage",
-      "pos": [1020, 630],
-      "size": [300, 280],
+      "pos": [
+        1020,
+        630
+      ],
+      "size": [
+        300,
+        280
+      ],
       "flags": {},
       "order": 17,
       "mode": 0,
@@ -473,20 +780,33 @@
           "shape": 3
         }
       ],
-      "properties": { "Node name for S&R": "LoadImage" },
-      "widgets_values": ["continue_last.png", "image"]
+      "properties": {
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": [
+        "continue_last.png",
+        "image"
+      ]
     },
     {
       "id": 16,
       "type": "Note",
-      "pos": [60, 600],
-      "size": [980, 165],
+      "pos": [
+        60,
+        600
+      ],
+      "size": [
+        980,
+        165
+      ],
       "flags": {},
       "order": 18,
       "mode": 0,
-      "properties": { "text": "" },
+      "properties": {
+        "text": ""
+      },
       "widgets_values": [
-        "QUICK PARAMETERS PANEL\n\n**Noisy first frames:** With **no init image**, the sampler uses **full denoise on frame 0** (normal Deforum+Comfy path), then **scheduled strength** on later frames — so the start looks wild until the chain stabilizes. Mitigations here: **more steps early** (#14 `0:(10)` → `6:(8)` → `24:(6)`), **softer noise/contrast ramps** (#3), **gentler strength** on frames 1–2 (`0.30` after frame 0 in schedule), **`fixed` seed** (#2) for calmer first frame. For the **calmest** start, set **#8 use_init = Yes** and put a **neutral 960×540 PNG** at `input/continue_last.png` (or your `init_image` path).\n\n**SDXL Turbo:** euler + sgm_uniform, CFG 1.0, **#23** CLIP -2, **#22** sharpen. **LoRA:** #18 CLIP → #23 → #9 when using #17/#18.\n\n**Resolution / encode:** 960×540 (or 960×544); VHS yuv422p CRF 7. CONTINUE: #19 / #20 / #15 / #8."
+        "QUICK PARAMETERS PANEL\n\n**Noisy first frames:** With **no init image**, the sampler uses **full denoise on frame 0** (normal Deforum+Comfy path), then **scheduled strength** on later frames \u2014 so the start looks wild until the chain stabilizes. Mitigations here: **more steps early** (#14 `0:(10)` \u2192 `6:(8)` \u2192 `24:(6)`), **softer noise/contrast ramps** (#3), **gentler strength** on frames 1\u20132 (`0.30` after frame 0 in schedule), **`fixed` seed** (#2) for calmer first frame. For the **calmest** start, set **#8 use_init = Yes** and put a **neutral 960\u00d7540 PNG** at `input/continue_last.png` (or your `init_image` path).\n\n**SDXL Turbo:** euler + sgm_uniform, CFG 1.0, **#23** CLIP -2, **#22** sharpen. **LoRA:** #18 CLIP \u2192 #23 \u2192 #9 when using #17/#18.\n\n**Resolution / encode:** 960\u00d7540 (or 960\u00d7544); VHS yuv422p CRF 7. CONTINUE: #19 / #20 / #15 / #8."
       ],
       "color": "#432",
       "bgcolor": "#653"
@@ -494,14 +814,28 @@
     {
       "id": 17,
       "type": "LoraLoader",
-      "pos": [60, 500],
-      "size": [330, 126],
+      "pos": [
+        60,
+        500
+      ],
+      "size": [
+        330,
+        126
+      ],
       "flags": {},
       "order": 19,
       "mode": 0,
       "inputs": [
-        { "name": "model", "type": "MODEL", "link": null },
-        { "name": "clip", "type": "CLIP", "link": null }
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": null
+        },
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": null
+        }
       ],
       "outputs": [
         {
@@ -519,21 +853,41 @@
           "slot_index": 1
         }
       ],
-      "properties": { "Node name for S&R": "LoraLoader" },
-      "title": "LoRA A (optional — #1→here→#18; CLIP #18→#23→#9)",
-      "widgets_values": ["placeholder.safetensors", 0, 0]
+      "properties": {
+        "Node name for S&R": "LoraLoader"
+      },
+      "title": "LoRA A (optional \u2014 #1\u2192here\u2192#18; CLIP #18\u2192#23\u2192#9)",
+      "widgets_values": [
+        "placeholder.safetensors",
+        0,
+        0
+      ]
     },
     {
       "id": 18,
       "type": "LoraLoader",
-      "pos": [410, 500],
-      "size": [330, 126],
+      "pos": [
+        410,
+        500
+      ],
+      "size": [
+        330,
+        126
+      ],
       "flags": {},
       "order": 20,
       "mode": 0,
       "inputs": [
-        { "name": "model", "type": "MODEL", "link": null },
-        { "name": "clip", "type": "CLIP", "link": null }
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": null
+        },
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": null
+        }
       ],
       "outputs": [
         {
@@ -551,72 +905,252 @@
           "slot_index": 1
         }
       ],
-      "properties": { "Node name for S&R": "LoraLoader" },
-      "title": "LoRA B (optional — after #17; CLIP out→#23→#9)",
-      "widgets_values": ["placeholder.safetensors", 0, 0]
+      "properties": {
+        "Node name for S&R": "LoraLoader"
+      },
+      "title": "LoRA B (optional \u2014 after #17; CLIP out\u2192#23\u2192#9)",
+      "widgets_values": [
+        "placeholder.safetensors",
+        0,
+        0
+      ]
     },
     {
       "id": 19,
       "type": "VHS_SelectImages",
-      "pos": [2280, 480],
-      "size": [320, 106],
+      "pos": [
+        2280,
+        480
+      ],
+      "size": [
+        320,
+        106
+      ],
       "flags": {},
       "order": 21,
       "mode": 0,
-      "inputs": [{ "name": "image", "type": "IMAGE", "link": 19 }],
+      "inputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 19
+        }
+      ],
       "outputs": [
         {
           "name": "IMAGE",
           "type": "IMAGE",
-          "links": [20],
+          "links": [
+            20
+          ],
           "shape": 3,
           "slot_index": 0
         }
       ],
-      "properties": { "Node name for S&R": "VHS_SelectImages" },
+      "properties": {
+        "Node name for S&R": "VHS_SelectImages"
+      },
       "title": "Last frame (continuation)",
-      "widgets_values": ["-1", true, true]
+      "widgets_values": [
+        "-1",
+        true,
+        true
+      ]
     },
     {
       "id": 20,
       "type": "SaveImage",
-      "pos": [2640, 480],
-      "size": [320, 270],
+      "pos": [
+        2640,
+        480
+      ],
+      "size": [
+        320,
+        270
+      ],
       "flags": {},
       "order": 22,
       "mode": 0,
-      "inputs": [{ "name": "images", "type": "IMAGE", "link": 20 }],
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 20
+        }
+      ],
       "outputs": [],
-      "properties": { "Node name for S&R": "SaveImage" },
-      "title": "Save last frame → input/continue_last.png",
-      "widgets_values": ["deforum_continue_last"]
+      "properties": {
+        "Node name for S&R": "SaveImage"
+      },
+      "title": "Save last frame \u2192 input/continue_last.png",
+      "widgets_values": [
+        "deforum_continue_last"
+      ]
     }
   ],
   "links": [
-    [1, 1, 0, 9, 1, "MODEL"],
-    [2, 1, 1, 23, 0, "CLIP"],
-    [23, 23, 0, 9, 2, "CLIP"],
-    [3, 1, 2, 9, 3, "VAE"],
-    [4, 2, 0, 3, 0, "deforum_data"],
-    [5, 3, 0, 4, 0, "deforum_data"],
-    [6, 4, 0, 5, 0, "deforum_data"],
-    [7, 5, 0, 6, 0, "deforum_data"],
-    [8, 6, 0, 7, 0, "deforum_data"],
-    [9, 7, 0, 8, 0, "deforum_data"],
-    [10, 8, 0, 9, 0, "deforum_data"],
-    [21, 9, 0, 22, 0, "IMAGE"],
-    [22, 22, 0, 21, 0, "IMAGE"],
-    [11, 21, 0, 10, 0, "IMAGE"],
-    [19, 21, 0, 19, 0, "IMAGE"],
-    [20, 19, 0, 20, 0, "IMAGE"],
-    [12, 11, 0, 10, 3, "FLOAT"],
-    [13, 13, 0, 4, 1, "INT"],
-    [14, 14, 0, 3, 1, "STRING"]
+    [
+      1,
+      1,
+      0,
+      9,
+      1,
+      "MODEL"
+    ],
+    [
+      2,
+      1,
+      1,
+      23,
+      0,
+      "CLIP"
+    ],
+    [
+      23,
+      23,
+      0,
+      9,
+      2,
+      "CLIP"
+    ],
+    [
+      3,
+      1,
+      2,
+      9,
+      3,
+      "VAE"
+    ],
+    [
+      4,
+      2,
+      0,
+      3,
+      0,
+      "deforum_data"
+    ],
+    [
+      5,
+      3,
+      0,
+      4,
+      0,
+      "deforum_data"
+    ],
+    [
+      6,
+      4,
+      0,
+      5,
+      0,
+      "deforum_data"
+    ],
+    [
+      7,
+      5,
+      0,
+      6,
+      0,
+      "deforum_data"
+    ],
+    [
+      8,
+      6,
+      0,
+      7,
+      0,
+      "deforum_data"
+    ],
+    [
+      9,
+      7,
+      0,
+      8,
+      0,
+      "deforum_data"
+    ],
+    [
+      10,
+      8,
+      0,
+      9,
+      0,
+      "deforum_data"
+    ],
+    [
+      21,
+      9,
+      0,
+      22,
+      0,
+      "IMAGE"
+    ],
+    [
+      22,
+      22,
+      0,
+      21,
+      0,
+      "IMAGE"
+    ],
+    [
+      11,
+      21,
+      0,
+      10,
+      0,
+      "IMAGE"
+    ],
+    [
+      19,
+      21,
+      0,
+      19,
+      0,
+      "IMAGE"
+    ],
+    [
+      20,
+      19,
+      0,
+      20,
+      0,
+      "IMAGE"
+    ],
+    [
+      12,
+      11,
+      0,
+      10,
+      3,
+      "FLOAT"
+    ],
+    [
+      13,
+      13,
+      0,
+      4,
+      1,
+      "INT"
+    ],
+    [
+      14,
+      14,
+      0,
+      3,
+      1,
+      "STRING"
+    ]
   ],
   "groups": [
     {
-      "title": "QUICK PARAMETERS — 960×540 HQ · SDXL Turbo · optional LoRA · FPS · frames · continue · init",
-      "bounding": [5, 475, 3000, 820],
+      "title": "QUICK PARAMETERS \u2014 960\u00d7540 HQ \u00b7 SDXL Turbo \u00b7 optional LoRA \u00b7 FPS \u00b7 frames \u00b7 continue \u00b7 init",
+      "bounding": [
+        5,
+        475,
+        3000,
+        820
+      ],
       "color": "#264"
     }
   ],

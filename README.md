@@ -14,7 +14,7 @@ Root-level copies are identical and exist for convenient drag-and-drop into a ba
 |---|---|---|---|
 | `deforum_video_sequencer_z_image_turbo.json` | Z-Image Turbo (6B, Alibaba) | 8 | `euler` + `turbo` |
 | `deforum_video_sequencer_flux_schnell.json` | Flux Schnell (12B, BFL) | 4 | `euler` + `simple` |
-| `deforum_video_sequencer_sdxl_turbo.json` | SDXL Turbo (Juggernaut) | 4–8 | `euler_ancestral` + `karras` |
+| `deforum_video_sequencer_sdxl_turbo.json` | SDXL Turbo (Juggernaut) | 4 | `euler` + `sgm_uniform` |
 
 ---
 
@@ -46,8 +46,8 @@ Download from [Comfy-Org/z\_image\_turbo](https://huggingface.co/Comfy-Org/z_ima
 | **CFG** | `1.0` | Distilled — CFG > 1 produces artefacts |
 | **Sampler** | `euler` | |
 | **Scheduler** | `turbo` | Required for correct noise scaling |
-| **Strength schedule** | `0:(0.65), 12:(0.70), 24:(0.60)` | Lower = more temporal coherence |
-| **Noise schedule** | `0:(0.03), 12:(0.04)` | Keep small to suppress flicker |
+| **Strength schedule** | `0:(0.65), 12:(0.70), 24:(0.62)` | Lower = more temporal coherence |
+| **Noise schedule** | `0:(0.030), 12:(0.040)` | Keep small to suppress flicker |
 | **Seed** | Fixed (any value) | Random seed causes visible jumps between frames |
 | **Resolution** | `1024×576` (16:9) or `768×768` | Stick to multiples of 64 |
 | **Zoom schedule** | `0:(1.002)` | Very gentle zoom keeps the chain stable |
@@ -86,8 +86,8 @@ Download from [Comfy-Org/flux\_schnell](https://huggingface.co/Comfy-Org/flux_sc
 | **CFG** | `1.0` | Distilled — negative prompts have no effect |
 | **Sampler** | `euler` | |
 | **Scheduler** | `simple` | Flux-native; do not use `karras` |
-| **Strength schedule** | `0:(0.75), 12:(0.80), 24:(0.70)` | Flux handles slightly higher strength well |
-| **Noise schedule** | `0:(0.02)` | Flux is very prompt-faithful; keep noise minimal |
+| **Strength schedule** | `0:(0.65), 8:(0.72), 24:(0.68)` | Flux handles higher strength well |
+| **Noise schedule** | `0:(0.020)` | Flux is very prompt-faithful; keep noise minimal |
 | **Seed** | Fixed | Same reason as Z-Image Turbo |
 | **Resolution** | `1024×576` or `896×512` | Must use VAE-encode path (init image required) |
 | **Zoom schedule** | `0:(1.002)` | |
@@ -112,14 +112,14 @@ Older SDXL Turbo–based preset using `sd_xl_turbo_1.0_fp16.safetensors` (Jugger
 
 | Parameter | Recommended value | Notes |
 |---|---|---|
-| **Steps** | `4–8` | SDXL Turbo sweet-spot |
-| **CFG** | `1.0–2.0` | SDXL Turbo is distilled; stay low |
-| **Sampler** | `euler_ancestral` | |
-| **Scheduler** | `karras` | |
-| **Strength schedule** | `0:(0.55), 12:(0.60)` | SDXL is heavier; lower strength = more coherence |
-| **Noise schedule** | `0:(0.04)` | |
+| **Steps** | `4` | Distilled for 1–4 steps; higher adds little |
+| **CFG** | `1.0` | Distilled — CFG > 1 adds artefacts |
+| **Sampler** | `euler` | SDXL Turbo canonical sampler |
+| **Scheduler** | `sgm_uniform` | Required for correct turbo noise scaling; not karras |
+| **Strength schedule** | `0:(0.55), 12:(0.60)` | SDXL is heavier per frame; moderate strength avoids drift |
+| **Noise schedule** | `0:(0.040)` | |
 | **Seed** | Fixed | |
-| **Resolution** | `1024×576` or `1024×1024` | SDXL native resolution |
+| **Resolution** | `960×540` | 16:9; SDXL Turbo works well at sub-1024 |
 | **Frames** | `48–120` | SDXL is slower per frame |
 
 ---
