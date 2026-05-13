@@ -93,6 +93,38 @@ swarm_is_running() {
 # ---------------------------------------------------------------------------
 # Commands
 # ---------------------------------------------------------------------------
+cmd_setup_models() {
+    # Create symlinks so ComfyUI's diffusion_models/ can see models stored under Stable-Diffusion/FLUX1/
+    local MODELS_DIR="${1:-/data/models}"
+
+    echo "Setting up model symlinks in $MODELS_DIR/diffusion_models/"
+    mkdir -p "$MODELS_DIR/diffusion_models"
+
+    local FLUX1_DIR="$MODELS_DIR/Stable-diffusion/FLUX1"
+    local UNET_DIR="$MODELS_DIR/diffusion_models"
+
+    local linked=0 skipped=0
+    for f in \
+        "flux1-schnell-fp8.safetensors" \
+        "flux1-dev-fp8.safetensors" \
+        "flux1-dev-bnb-nf4-v2.safetensors"; do
+        src="$FLUX1_DIR/$f"
+        dst="$UNET_DIR/$f"
+        if [[ -f "$src" && ! -e "$dst" ]]; then
+            ln -sf "$src" "$dst"
+            log "symlinked: $f → diffusion_models/"
+            ((linked++)) || true
+        elif [[ -e "$dst" ]]; then
+            log "already exists: diffusion_models/$f"
+            ((skipped++)) || true
+        else
+            log "source not found, skipping: $src"
+        fi
+    done
+
+    echo "Done: $linked symlink(s) created, $skipped already present."
+}
+
 cmd_status() {
     echo "=== Deforum Workflow Manager — Status ==="
     echo ""
@@ -252,6 +284,7 @@ cmd_menu() {
     echo "  2) Trigger a workflow via SwarmUI API"
     echo "  3) Show status"
     echo "  4) Apply SwarmUI patches"
+    echo "  5) Set up model symlinks (Flux Schnell diffusion_models/)"
     echo "  q) Quit"
     echo ""
     printf "Choice: "
@@ -262,6 +295,7 @@ cmd_menu() {
         2) menu_run ;;
         3) cmd_status ;;
         4) menu_patches ;;
+        5) printf "Models base dir [/data/models]: "; read -r mdir; cmd_setup_models "${mdir:-/data/models}" ;;
         q|Q) exit 0 ;;
         *) echo "Unknown choice."; exit 1 ;;
     esac
@@ -368,13 +402,17 @@ while [[ $# -gt 0 ]]; do
         --host)      SWARM_HOST="$2";    shift 2 ;;
         --port)      SWARM_PORT="$2";    shift 2 ;;
         --dest)      WORKFLOW_DEST="$2"; shift 2 ;;
+        --setup-models)
+            COMMAND="setup_models"
+            COMMAND_ARG="${2:-/data/models}"; [[ $# -ge 2 ]] && shift; shift ;;
         --help|-h)
             echo "Usage: $0 [options]"
             echo ""
             echo "Options:"
             echo "  --install <id|all>       Install workflow(s) to SwarmUI CustomWorkflows dir"
             echo "  --run <id> [run-opts]    Trigger workflow via SwarmUI API"
-            echo "  --status                 Show workflow and SwarmUI status"
+            echo "  --setup-models [path]    Create diffusion_models/ symlinks for Flux Schnell (default: /data/models)
+  --status                 Show workflow and SwarmUI status"
             echo "  --host <host>            SwarmUI host (default: localhost)"
             echo "  --port <port>            SwarmUI port (default: 7801)"
             echo "  --dest <path>            Override CustomWorkflows destination path"
@@ -402,8 +440,9 @@ while [[ $# -gt 0 ]]; do
 done
 
 case "$COMMAND" in
-    install) cmd_install "$COMMAND_ARG" ;;
-    run)     cmd_run "$COMMAND_ARG" "$@" ;;
-    status)  cmd_status ;;
-    "")      cmd_menu ;;
+    install)      cmd_install "$COMMAND_ARG" ;;
+    run)          cmd_run "$COMMAND_ARG" "$@" ;;
+    status)       cmd_status ;;
+    setup_models) cmd_setup_models "$COMMAND_ARG" ;;
+    "")           cmd_menu ;;
 esac

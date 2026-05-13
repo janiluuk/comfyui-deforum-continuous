@@ -31,9 +31,9 @@
       "properties": {
         "Node name for S&R": "UNETLoader"
       },
-      "title": "Flux Schnell \u2014 diffusion_models/flux1-schnell.safetensors",
+      "title": "Flux Schnell \u2014 diffusion_models/flux1-schnell-fp8.safetensors  (symlink from Stable-Diffusion/FLUX1/ if needed)",
       "widgets_values": [
-        "flux1-schnell.safetensors",
+        "flux1-schnell-fp8.safetensors",
         "default"
       ]
     },
@@ -1529,9 +1529,9 @@
         "Node name for S&R": "CheckpointLoaderSimple"
       },
       "widgets_values": [
-        "SDXL/sd_xl_turbo_1.0_fp16.safetensors"
+        "SDXL/juggernautXL_v8Rundiffusion.safetensors"
       ],
-      "title": "AnimateDiff checkpoint  \u00b7  set to any SD1.5 or SDXL base model"
+      "title": "AnimateDiff checkpoint  \u00b7  SDXL/juggernautXL_v8Rundiffusion.safetensors  (or any base SDXL \u2014 NOT turbo for best AnimateDiff quality)"
     },
     {
       "id": 37,
@@ -1611,7 +1611,7 @@
         "Node name for S&R": "ADE_AnimateDiffLoaderWithContext"
       },
       "widgets_values": [
-        "animatediff_sdxl_v10.ckpt",
+        "mm_sdxl_v10_beta.ckpt",
         "linear (AnimateDiff)"
       ],
       "title": "AnimateDiff loader  \u00b7  set motion module filename"

@@ -31,9 +31,9 @@
       "properties": {
         "Node name for S&R": "UNETLoader"
       },
-      "title": "Z-Image Turbo \u2014 diffusion_models/z_image_turbo_bf16\u2026",
+      "title": "Z-Image Turbo \u2014 diffusion_models/z-image-turbo_fp8_scaled_e4m3fn_KJ.safetensors",
       "widgets_values": [
-        "z_image_turbo_bf16.safetensors",
+        "z-image-turbo_fp8_scaled_e4m3fn_KJ.safetensors",
         "default"
       ]
     },
@@ -1530,9 +1530,9 @@
         "Node name for S&R": "CheckpointLoaderSimple"
       },
       "widgets_values": [
-        "SDXL/sd_xl_turbo_1.0_fp16.safetensors"
+        "SDXL/juggernautXL_v8Rundiffusion.safetensors"
       ],
-      "title": "AnimateDiff checkpoint  \u00b7  set to any SD1.5 or SDXL base model"
+      "title": "AnimateDiff checkpoint  \u00b7  SDXL/juggernautXL_v8Rundiffusion.safetensors  (or any base SDXL \u2014 NOT turbo for best AnimateDiff quality)"
     },
     {
       "id": 37,
@@ -1612,7 +1612,7 @@
         "Node name for S&R": "ADE_AnimateDiffLoaderWithContext"
       },
       "widgets_values": [
-        "animatediff_sdxl_v10.ckpt",
+        "mm_sdxl_v10_beta.ckpt",
         "linear (AnimateDiff)"
       ],
       "title": "AnimateDiff loader  \u00b7  set motion module filename"

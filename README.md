@@ -32,7 +32,7 @@ A full Deforum animation workflow built around **Z-Image Turbo** — Alibaba's d
 
 | File | Folder |
 |---|---|
-| `z_image_turbo_bf16.safetensors` | `models/diffusion_models/` |
+| `z-image-turbo_fp8_scaled_e4m3fn_KJ.safetensors` | `models/diffusion_models/` |
 | `qwen_3_4b.safetensors` | `models/text_encoders/` |
 | `ae.safetensors` | `models/vae/` |
 
@@ -69,7 +69,7 @@ A Deforum animation workflow built around **Flux Schnell** — Black Forest Labs
 
 | File | Folder |
 |---|---|
-| `flux1-schnell.safetensors` | `models/diffusion_models/` |
+| `flux1-schnell-fp8.safetensors` | `models/diffusion_models/` (symlink from `Stable-Diffusion/FLUX1/` — see setup script) |
 | `clip_l.safetensors` | `models/text_encoders/` |
 | `t5xxl_fp8_e4m3fn.safetensors` | `models/text_encoders/` |
 | `ae.safetensors` | `models/vae/` |

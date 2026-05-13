@@ -1095,7 +1095,7 @@
         "Node name for S&R": "ADE_AnimateDiffLoaderWithContext"
       },
       "widgets_values": [
-        "animatediff_sdxl_v10.ckpt",
+        "mm_sdxl_v10_beta.ckpt",
         "linear (AnimateDiff)"
       ],
       "title": "AnimateDiff loader (SDXL)  \u00b7  set motion module filename"
