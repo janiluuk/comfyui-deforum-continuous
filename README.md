@@ -175,6 +175,60 @@ Preprocessor nodes are provided by [comfyui_controlnet_aux](https://github.com/F
 
 ---
 
+---
+
+## AnimateDiff path
+
+Every workflow ships a **muted AnimateDiff path** directly below the main Deforum graph. It provides an alternative generation method — all frames rendered simultaneously via temporal attention rather than iterative img2img chaining — with the same output VHS node.
+
+### Architecture compatibility
+
+| Workflow | AnimateDiff | Notes |
+|---|---|---|
+| `sdxl_turbo` | ✓ native | Uses existing CheckpointLoaderSimple + CLIPSetLastLayer |
+| `flux_schnell` | via separate checkpoint | Flux has no motion module; path uses its own `CheckpointLoaderSimple` [id=36] |
+| `z_image_turbo` | via separate checkpoint | Same — add any SDXL/SD1.5 checkpoint to the AD `CheckpointLoaderSimple` [id=36] |
+
+### Switching from Deforum to AnimateDiff
+
+1. **Mute the Deforum sampler** — right-click `DeforumSingleSampleNode` [id=9] → **Mute Node**
+2. **Unmute all AnimateDiff nodes** — right-click each node in the purple group → **Remove Mute**:
+   - `CheckpointLoaderSimple` [id=36] *(Flux/Z-Image only)*
+   - `ADE_AnimateDiffUniformContextOptions`
+   - `ADE_AnimateDiffLoaderWithContext` — set `model_name` to your installed `.ckpt`
+   - Both `CLIPTextEncode` nodes — edit the positive/negative prompt text
+   - `EmptyLatentImage` — set `batch_size` = desired frame count
+   - `KSampler` — adjust steps, CFG, sampler, scheduler, denoise
+   - `VAEDecode`
+   - `VHS_VideoCombine` (AnimateDiff output)
+
+**To switch back to Deforum:** unmute `DeforumSingleSampleNode` [id=9]; mute the AD nodes above.
+
+### AnimateDiff controls reference
+
+| Node | Key settings |
+|---|---|
+| `ADE_AnimateDiffLoaderWithContext` | `model_name` — filename of your motion module (place in `models/animatediff_models/`) |
+| `ADE_AnimateDiffUniformContextOptions` | `context_length` (default 16) — frames per context window; `context_overlap` (default 4) |
+| `EmptyLatentImage` | `batch_size` — total frame count (e.g. 24 = 1 s at 24 fps) |
+| `KSampler` | `steps` 20, `cfg` 7.0, `sampler` euler, `scheduler` karras, `denoise` 1.0 (recommended defaults) |
+| `VHS_VideoCombine` (AD) | `filename_prefix` — output filename; frame rate shared with Deforum PrimitiveNode |
+
+### Recommended motion modules
+
+| Architecture | Motion module |
+|---|---|
+| SDXL | `animatediff_sdxl_v10.ckpt` (AnimateDiff-Evolved SDXL) |
+| SD 1.5 | `mm_sd_v15_v2.ckpt` or `animatediff_v3_adapter_sd.ckpt` |
+
+Download from [guoyww/animatediff](https://huggingface.co/guoyww/animatediff) and place in `ComfyUI/models/animatediff_models/`.
+
+### Required additional custom node
+
+- [ComfyUI-AnimateDiff-Evolved](https://github.com/Kosinkadink/ComfyUI-AnimateDiff-Evolved)
+
+---
+
 ## Required custom nodes (all workflows)
 
 - [deforum-comfy-nodes](https://github.com/XmYx/deforum-comfy-nodes)

@@ -1,6 +1,6 @@
 {
-  "last_node_id": 34,
-  "last_link_id": 33,
+  "last_node_id": 44,
+  "last_link_id": 45,
   "nodes": [
     {
       "id": 1,
@@ -625,7 +625,8 @@
           "type": "FLOAT",
           "links": [
             12,
-            33
+            33,
+            45
           ],
           "widget": {
             "name": "frame_rate"
@@ -1454,6 +1455,452 @@
           "paused": false
         }
       }
+    },
+    {
+      "id": 35,
+      "type": "Note",
+      "pos": [
+        50,
+        1500
+      ],
+      "size": [
+        1400,
+        250
+      ],
+      "flags": {},
+      "order": 30,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "title": "ANIMATEDIFF PATH  \u00b7  muted by default  \u00b7  needs separate SD/SDXL checkpoint",
+      "properties": {
+        "text": "ANIMATEDIFF PATH  \u00b7  All nodes below are MUTED by default\n\n\u26a0  Flux / Z-Image Turbo have no native AnimateDiff motion module.\n   This path uses a SEPARATE SD1.5 or SDXL checkpoint [id=36].\n   Set that checkpoint's filename \u2014 the main Flux/Z-Turbo model is NOT used here.\n   Recommended: any SDXL base model (e.g. SDXL/sd_xl_base_1.0.safetensors)\n\nRequired custom node: ComfyUI-AnimateDiff-Evolved\nMotion module goes in: models/animatediff_models/  (e.g. animatediff_sdxl_v10.ckpt)\n\nControls: edit KSampler (steps / CFG / sampler / scheduler)\n          edit EmptyLatentImage batch_size for frame count\n\nTO SWITCH  Deforum \u2192 AnimateDiff:\n  1. Right-click DeforumSingleSampleNode [id=9]  \u2192 Mute Node\n  2. Right-click each node in this group \u2192 Remove Mute\n     (Checkpoint, ADE Context, ADE Loader, pos/neg CLIP, EmptyLatent, KSampler, VAEDecode, VHS)\n\nTO SWITCH BACK: mute all AD nodes; unmute id=9."
+      },
+      "widgets_values": [
+        "ANIMATEDIFF PATH  \u00b7  All nodes below are MUTED by default\n\n\u26a0  Flux / Z-Image Turbo have no native AnimateDiff motion module.\n   This path uses a SEPARATE SD1.5 or SDXL checkpoint [id=36].\n   Set that checkpoint's filename \u2014 the main Flux/Z-Turbo model is NOT used here.\n   Recommended: any SDXL base model (e.g. SDXL/sd_xl_base_1.0.safetensors)\n\nRequired custom node: ComfyUI-AnimateDiff-Evolved\nMotion module goes in: models/animatediff_models/  (e.g. animatediff_sdxl_v10.ckpt)\n\nControls: edit KSampler (steps / CFG / sampler / scheduler)\n          edit EmptyLatentImage batch_size for frame count\n\nTO SWITCH  Deforum \u2192 AnimateDiff:\n  1. Right-click DeforumSingleSampleNode [id=9]  \u2192 Mute Node\n  2. Right-click each node in this group \u2192 Remove Mute\n     (Checkpoint, ADE Context, ADE Loader, pos/neg CLIP, EmptyLatent, KSampler, VAEDecode, VHS)\n\nTO SWITCH BACK: mute all AD nodes; unmute id=9."
+      ],
+      "color": "#445"
+    },
+    {
+      "id": 36,
+      "type": "CheckpointLoaderSimple",
+      "pos": [
+        50,
+        1790
+      ],
+      "size": [
+        360,
+        130
+      ],
+      "flags": {},
+      "order": 31,
+      "mode": 2,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            34
+          ],
+          "slot_index": 0,
+          "shape": 3
+        },
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": [
+            37,
+            38
+          ],
+          "slot_index": 1,
+          "shape": 3
+        },
+        {
+          "name": "VAE",
+          "type": "VAE",
+          "links": [
+            43
+          ],
+          "slot_index": 2,
+          "shape": 3
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CheckpointLoaderSimple"
+      },
+      "widgets_values": [
+        "SDXL/sd_xl_turbo_1.0_fp16.safetensors"
+      ],
+      "title": "AnimateDiff checkpoint  \u00b7  set to any SD1.5 or SDXL base model"
+    },
+    {
+      "id": 37,
+      "type": "ADE_AnimateDiffUniformContextOptions",
+      "pos": [
+        460,
+        1790
+      ],
+      "size": [
+        340,
+        160
+      ],
+      "flags": {},
+      "order": 32,
+      "mode": 2,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "CONTEXT_OPTIONS",
+          "type": "CONTEXT_OPTIONS",
+          "links": [
+            35
+          ],
+          "slot_index": 0,
+          "shape": 3
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ADE_AnimateDiffUniformContextOptions"
+      },
+      "widgets_values": [
+        16,
+        1,
+        4,
+        false
+      ],
+      "title": "Context window \u00b7 length=16 overlap=4"
+    },
+    {
+      "id": 38,
+      "type": "ADE_AnimateDiffLoaderWithContext",
+      "pos": [
+        850,
+        1790
+      ],
+      "size": [
+        440,
+        180
+      ],
+      "flags": {},
+      "order": 33,
+      "mode": 2,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 34
+        },
+        {
+          "name": "context_options",
+          "type": "CONTEXT_OPTIONS",
+          "link": 35
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            36
+          ],
+          "slot_index": 0,
+          "shape": 3
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ADE_AnimateDiffLoaderWithContext"
+      },
+      "widgets_values": [
+        "animatediff_sdxl_v10.ckpt",
+        "linear (AnimateDiff)"
+      ],
+      "title": "AnimateDiff loader  \u00b7  set motion module filename"
+    },
+    {
+      "id": 39,
+      "type": "CLIPTextEncode",
+      "pos": [
+        50,
+        2010
+      ],
+      "size": [
+        440,
+        130
+      ],
+      "flags": {},
+      "order": 34,
+      "mode": 2,
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 37
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "links": [
+            39
+          ],
+          "slot_index": 0,
+          "shape": 3
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CLIPTextEncode"
+      },
+      "widgets_values": [
+        "cinematic dreamscape, smooth flowing motion, volumetric light, atmospheric depth, photorealistic, high detail"
+      ],
+      "title": "Positive prompt (AnimateDiff)"
+    },
+    {
+      "id": 40,
+      "type": "CLIPTextEncode",
+      "pos": [
+        540,
+        2010
+      ],
+      "size": [
+        440,
+        130
+      ],
+      "flags": {},
+      "order": 35,
+      "mode": 2,
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 38
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "links": [
+            40
+          ],
+          "slot_index": 0,
+          "shape": 3
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CLIPTextEncode"
+      },
+      "widgets_values": [
+        "blurry, low quality, watermark, text, distorted, overexposed, static, flickering"
+      ],
+      "title": "Negative prompt (AnimateDiff)"
+    },
+    {
+      "id": 41,
+      "type": "EmptyLatentImage",
+      "pos": [
+        1030,
+        2010
+      ],
+      "size": [
+        270,
+        165
+      ],
+      "flags": {},
+      "order": 36,
+      "mode": 2,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": [
+            41
+          ],
+          "slot_index": 0,
+          "shape": 3
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "EmptyLatentImage"
+      },
+      "widgets_values": [
+        1024,
+        576,
+        24
+      ],
+      "title": "Latent frames  \u00b7  batch_size = frame count"
+    },
+    {
+      "id": 42,
+      "type": "KSampler",
+      "pos": [
+        50,
+        2190
+      ],
+      "size": [
+        315,
+        270
+      ],
+      "flags": {},
+      "order": 37,
+      "mode": 2,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 36
+        },
+        {
+          "name": "positive",
+          "type": "CONDITIONING",
+          "link": 39
+        },
+        {
+          "name": "negative",
+          "type": "CONDITIONING",
+          "link": 40
+        },
+        {
+          "name": "latent_image",
+          "type": "LATENT",
+          "link": 41
+        }
+      ],
+      "outputs": [
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": [
+            42
+          ],
+          "slot_index": 0,
+          "shape": 3
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "KSampler"
+      },
+      "widgets_values": [
+        12345,
+        "fixed",
+        20,
+        7.0,
+        "euler",
+        "karras",
+        1.0
+      ],
+      "title": "AnimateDiff KSampler  \u00b7  euler \u00b7 karras \u00b7 20 steps \u00b7 CFG 7"
+    },
+    {
+      "id": 43,
+      "type": "VAEDecode",
+      "pos": [
+        420,
+        2190
+      ],
+      "size": [
+        210,
+        130
+      ],
+      "flags": {},
+      "order": 38,
+      "mode": 2,
+      "inputs": [
+        {
+          "name": "samples",
+          "type": "LATENT",
+          "link": 42
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": 43
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            44
+          ],
+          "slot_index": 0,
+          "shape": 3
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VAEDecode"
+      },
+      "widgets_values": []
+    },
+    {
+      "id": 44,
+      "type": "VHS_VideoCombine",
+      "pos": [
+        680,
+        2190
+      ],
+      "size": [
+        350,
+        340
+      ],
+      "flags": {},
+      "order": 39,
+      "mode": 2,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 44
+        },
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "link": null
+        },
+        {
+          "name": "meta_batch",
+          "type": "VHS_BatchManager",
+          "link": null
+        },
+        {
+          "name": "frame_rate",
+          "type": "FLOAT",
+          "link": 45
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Filenames",
+          "type": "VHS_FILENAMES",
+          "links": [],
+          "slot_index": 0,
+          "shape": 3
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VHS_VideoCombine"
+      },
+      "widgets_values": {
+        "frame_rate": 24,
+        "loop_count": 0,
+        "filename_prefix": "animatediff_z_turbo_ckpt",
+        "format": "video/h264-mp4",
+        "pix_fmt": "yuv422p",
+        "crf": 7,
+        "save_metadata": true,
+        "trim_to_audio": false,
+        "pingpong": false,
+        "save_output": true,
+        "videopreview": {
+          "hidden": false,
+          "paused": false
+        }
+      },
+      "title": "AnimateDiff output"
     }
   ],
   "links": [
@@ -1672,6 +2119,102 @@
       34,
       3,
       "FLOAT"
+    ],
+    [
+      34,
+      36,
+      0,
+      38,
+      0,
+      "MODEL"
+    ],
+    [
+      35,
+      37,
+      0,
+      38,
+      1,
+      "CONTEXT_OPTIONS"
+    ],
+    [
+      36,
+      38,
+      0,
+      42,
+      0,
+      "MODEL"
+    ],
+    [
+      37,
+      36,
+      1,
+      39,
+      0,
+      "CLIP"
+    ],
+    [
+      38,
+      36,
+      1,
+      40,
+      0,
+      "CLIP"
+    ],
+    [
+      39,
+      39,
+      0,
+      42,
+      1,
+      "CONDITIONING"
+    ],
+    [
+      40,
+      40,
+      0,
+      42,
+      2,
+      "CONDITIONING"
+    ],
+    [
+      41,
+      41,
+      0,
+      42,
+      3,
+      "LATENT"
+    ],
+    [
+      42,
+      42,
+      0,
+      43,
+      0,
+      "LATENT"
+    ],
+    [
+      43,
+      36,
+      2,
+      43,
+      1,
+      "VAE"
+    ],
+    [
+      44,
+      43,
+      0,
+      44,
+      0,
+      "IMAGE"
+    ],
+    [
+      45,
+      11,
+      0,
+      44,
+      3,
+      "FLOAT"
     ]
   ],
   "groups": [
@@ -1716,6 +2259,16 @@
       "color": "#3f789e",
       "font_size": 14,
       "flags": {}
+    },
+    {
+      "title": "ANIMATEDIFF PATH  \u00b7  requires separate SD/SDXL checkpoint + AnimateDiff-Evolved  \u00b7  unmute to switch from Deforum",
+      "bounding": [
+        30,
+        1480,
+        1500,
+        1060
+      ],
+      "color": "#445"
     }
   ],
   "config": {},
