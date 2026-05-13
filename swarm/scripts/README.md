@@ -19,16 +19,16 @@ Presents a menu to install workflows, trigger runs via the SwarmUI API, check st
 **Install a workflow** into a running SwarmUI instance:
 
 ```bash
-# Install one workflow (auto-detects SwarmUI under ~/SwarmUI)
+# Install one workflow (auto-detects SwarmUI at /opt/swarm)
 bash swarm/scripts/manage-workflows.sh --install flux_schnell
 
-# Install all workflows to a specific path
-SWARM_ROOT=/opt/swarm/SwarmUI \
+# Install all workflows (explicit root)
+SWARM_ROOT=/opt/swarm \
   bash swarm/scripts/manage-workflows.sh --install all
 
-# Or specify the destination CustomWorkflows directory directly
+# Or specify the CustomWorkflows directory directly
 bash swarm/scripts/manage-workflows.sh \
-  --dest /opt/swarm/SwarmUI/src/BuiltinExtensions/ComfyUIBackend/CustomWorkflows \
+  --dest /opt/swarm/src/BuiltinExtensions/ComfyUIBackend/CustomWorkflows \
   --install all
 ```
 

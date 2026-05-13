@@ -48,10 +48,10 @@ detect_swarm_root() {
         echo "$SWARM_ROOT"
         return
     fi
-    # Common locations
+    # Common locations — /opt/swarm is the production install on this server
     for candidate in \
+        "/opt/swarm" \
         "$HOME/SwarmUI" \
-        "/opt/swarm/SwarmUI" \
         "/SwarmUI" \
         "$(dirname "$REPO_ROOT")/SwarmUI"; do
         if [[ -d "$candidate/src/BuiltinExtensions/ComfyUIBackend" ]]; then
