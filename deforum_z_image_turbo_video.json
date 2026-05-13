@@ -1,6 +1,6 @@
 {
-  "last_node_id": 24,
-  "last_link_id": 23,
+  "last_node_id": 31,
+  "last_link_id": 29,
   "nodes": [
     {
       "id": 1,
@@ -31,7 +31,7 @@
       "properties": {
         "Node name for S&R": "UNETLoader"
       },
-      "title": "Z-Image Turbo \u2014 diffusion_models/z_image_turbo_bf16\u2026",
+      "title": "Z-Image Turbo — diffusion_models/z_image_turbo_bf16…",
       "widgets_values": [
         "z_image_turbo_bf16.safetensors",
         "default"
@@ -66,7 +66,7 @@
       "properties": {
         "Node name for S&R": "CLIPLoader"
       },
-      "title": "Qwen TE \u2014 text_encoders/qwen_3_4b\u2026 (type: qwen_image)",
+      "title": "Qwen TE — text_encoders/qwen_3_4b… (type: qwen_image)",
       "widgets_values": [
         "qwen_3_4b.safetensors",
         "qwen_image",
@@ -108,7 +108,7 @@
       "properties": {
         "Node name for S&R": "DeforumBaseParamsNode"
       },
-      "title": "Base 960\u00d7544 \u00b7 euler + turbo sched \u00b7 fixed seed",
+      "title": "Base 960×544 · euler + turbo sched · fixed seed",
       "widgets_values": [
         960,
         544,
@@ -164,7 +164,7 @@
       "properties": {
         "Node name for S&R": "DeforumDiffusionParamsNode"
       },
-      "title": "Diffusion \u00b7 Z turbo: CFG 1, flat contrast, eased strength",
+      "title": "Diffusion · Z turbo: CFG 1, flat contrast, eased strength",
       "widgets_values": [
         "0:(0.020), 12:(0.028), 48:(0.034)",
         "0:(0.52), 1:(0.44), 2:(0.40), 4:(0.48), 48:(0.52)",
@@ -212,7 +212,7 @@
           "name": "deforum_data",
           "type": "deforum_data",
           "links": [
-            6
+            24
           ],
           "shape": 3,
           "slot_index": 0
@@ -245,7 +245,7 @@
         {
           "name": "deforum_data",
           "type": "deforum_data",
-          "link": 6
+          "link": 27
         }
       ],
       "outputs": [
@@ -393,10 +393,11 @@
       },
       "widgets_values": [
         true,
-        "continue_last.png",
+        "z_image_turbo_continue.png",
         "",
         false
-      ]
+      ],
+      "title": "Init image (use_init=No → fresh start; Yes → continue from last frame)"
     },
     {
       "id": 9,
@@ -527,7 +528,7 @@
       "properties": {
         "Node name for S&R": "ImageScaleBy"
       },
-      "title": "Native res pass-through (1\u00d7) \u2014 960\u00d7544",
+      "title": "Native res pass-through (1×) — 960×544",
       "widgets_values": [
         "lanczos",
         1
@@ -776,8 +777,8 @@
         600
       ],
       "size": [
-        1020,
-        220
+        1200,
+        280
       ],
       "flags": {},
       "order": 18,
@@ -786,7 +787,7 @@
         "text": ""
       },
       "widgets_values": [
-        "QUICK PANEL \u00b7 Z-IMAGE TURBO\n\n**Models:** #1 diffusion_models/`z_image_turbo_bf16.safetensors` \u00b7 #23 text_encoders/`qwen_3_4b.safetensors` (CLIPLoader type **qwen_image**) \u00b7 #24 `ae.safetensors`.\n\n**Smooth / anti-flicker:** **fixed** seed (#2); **Euler** + **turbo** scheduler; **CFG 1.0 flat** (#3); **8 steps flat** (#14) \u2014 distilled model degrades beyond ~8 steps; eased **strength** ramp #3 for calmer chaining; softened **motion** (#5 zoom); softened **noise** ramp; toned **sharp** (#22); weaker **negative** (#7); **704\u20131024-ish** natives work \u2014 here **960\u00d7544** for 16-aligned pixels.\n\n**Performance:** FP8 loaders on Ada/Hopper: UNET `#1` \u2192 `fp8_e4m3fn_fast` if supported.\n\n**Continuation:** Same as preset \u2014 init #8 \u00b7 #15 \u00b7 #19 / #20."
+        "QUICK PANEL · Z-IMAGE TURBO\n\nMODELS:  #1 diffusion_models/z_image_turbo_bf16.safetensors  |  #23 text_encoders/qwen_3_4b.safetensors (CLIPLoader type: qwen_image)  |  #24 vae/ae.safetensors\n\nANTI-FLICKER:  fixed seed · euler + turbo scheduler · CFG 1.0 · 8 steps flat · eased strength/noise · slow zoom\n\nCONTINUATION — three steps:\n  1. Unmute #28 (WAS_Image_Save). Set its output_path to your ComfyUI input/ directory (e.g. /home/user/ComfyUI/input). Leave filename_prefix as z_image_turbo_continue, overwrite_mode prefix_as_filename.\n  2. Queue a run. The last frame is saved to input/z_image_turbo_continue.png automatically.\n  3. Set use_init = Yes in #8 to continue from that frame. Toggle back to No for a fresh start.\n  NOTE: without WAS Node Suite installed, right-click the #20 preview → save manually → drop in input/z_image_turbo_continue.png.\n\nALTERNATIVE ANIM NODES (disabled, in row below):  #25 Depth Warp (3D mode) · #26 Diffusion Cadence (smoother inter-frame motion) · #27 Color Coherence (stable colours). Right-click → enable to activate.\n\nCONTROLNET (muted, bottom-right):  #29 ControlNetLoader + #30 DeforumControlNetApply. Unmute and wire: CLIPTextEncode → #30 conditioning input · control image → #30 image input. ⚠️ DeforumSingleSampleNode (#9) builds its own conditioning internally — ControlNet output must feed a DeforumKSampler/iterator-based path, not #9 directly."
       ],
       "color": "#432",
       "bgcolor": "#653"
@@ -836,7 +837,7 @@
       "properties": {
         "Node name for S&R": "LoraLoader"
       },
-      "title": "LoRA A (optional \u2014 MODEL #17\u2192#18\u2192#9; CLIP ends at #23\u2192#9)",
+      "title": "LoRA A (optional — MODEL #17→#18→#9; CLIP ends at #23→#9)",
       "widgets_values": [
         "placeholder.safetensors",
         0,
@@ -888,7 +889,7 @@
       "properties": {
         "Node name for S&R": "LoraLoader"
       },
-      "title": "LoRA B (optional \u2014 MODEL chain; CLIP #23\u2192#9)",
+      "title": "LoRA B (optional — MODEL chain; CLIP #23→#9)",
       "widgets_values": [
         "placeholder.safetensors",
         0,
@@ -921,7 +922,8 @@
           "name": "IMAGE",
           "type": "IMAGE",
           "links": [
-            20
+            20,
+            28
           ],
           "shape": 3,
           "slot_index": 0
@@ -939,14 +941,14 @@
     },
     {
       "id": 20,
-      "type": "SaveImage",
+      "type": "PreviewImage",
       "pos": [
         2640,
         480
       ],
       "size": [
         320,
-        270
+        100
       ],
       "flags": {},
       "order": 22,
@@ -962,10 +964,8 @@
       "properties": {
         "Node name for S&R": "SaveImage"
       },
-      "title": "Save last frame \u2192 input/continue_last.png",
-      "widgets_values": [
-        "deforum_continue_last"
-      ]
+      "title": "Last frame preview (right-click → Save to input/ for continuation)",
+      "widgets_values": []
     },
     {
       "id": 24,
@@ -996,10 +996,292 @@
       "properties": {
         "Node name for S&R": "VAELoader"
       },
-      "title": "Z AE VAE \u2014 vae/ae.safetensors (Flux-compatible AE)",
+      "title": "Z AE VAE — vae/ae.safetensors (Flux-compatible AE)",
       "widgets_values": [
         "ae.safetensors"
       ]
+    },
+    {
+      "id": 25,
+      "type": "DeforumDepthParamsNode",
+      "pos": [
+        390,
+        1120
+      ],
+      "size": [
+        340,
+        260
+      ],
+      "flags": {},
+      "order": 23,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "deforum_data",
+          "type": "deforum_data",
+          "link": 24
+        }
+      ],
+      "outputs": [
+        {
+          "name": "deforum_data",
+          "type": "deforum_data",
+          "links": [
+            25
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "DeforumDepthParamsNode"
+      },
+      "title": "3D Depth Warp (disabled — enable → switch AnimParams to 3D first)",
+      "widgets_values": [
+        true,
+        "Zoe",
+        0.2,
+        "border",
+        "bicubic",
+        false
+      ]
+    },
+    {
+      "id": 26,
+      "type": "DeforumCadenceParamsNode",
+      "pos": [
+        770,
+        1120
+      ],
+      "size": [
+        340,
+        230
+      ],
+      "flags": {},
+      "order": 24,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "deforum_data",
+          "type": "deforum_data",
+          "link": 25
+        }
+      ],
+      "outputs": [
+        {
+          "name": "deforum_data",
+          "type": "deforum_data",
+          "links": [
+            26
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "DeforumCadenceParamsNode"
+      },
+      "title": "Diffusion Cadence (disabled — cadence=2+ adds smoother optical-flow tween frames)",
+      "widgets_values": [
+        1,
+        "None",
+        "0: (1)",
+        "None",
+        "0: (1)",
+        "0"
+      ]
+    },
+    {
+      "id": 27,
+      "type": "DeforumColorParamsNode",
+      "pos": [
+        1150,
+        1120
+      ],
+      "size": [
+        340,
+        190
+      ],
+      "flags": {},
+      "order": 25,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "deforum_data",
+          "type": "deforum_data",
+          "link": 26
+        }
+      ],
+      "outputs": [
+        {
+          "name": "deforum_data",
+          "type": "deforum_data",
+          "links": [
+            27
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "DeforumColorParamsNode"
+      },
+      "title": "Color Coherence (disabled — LAB recommended; keeps palette stable across frames)",
+      "widgets_values": [
+        "None",
+        "",
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "id": 28,
+      "type": "WAS_Image_Save",
+      "pos": [
+        2640,
+        550
+      ],
+      "size": [
+        390,
+        270
+      ],
+      "flags": {},
+      "order": 26,
+      "mode": 2,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 28
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "Node name for S&R": "WAS_Image_Save"
+      },
+      "title": "Continue: save last frame → input/ (unmute + set output_path)",
+      "widgets_values": [
+        "",
+        "z_image_turbo_continue",
+        "",
+        0,
+        "false",
+        "png",
+        100,
+        "false",
+        "false",
+        "false",
+        "false",
+        "true",
+        "prefix_as_filename"
+      ]
+    },
+    {
+      "id": 29,
+      "type": "ControlNetLoader",
+      "pos": [
+        1620,
+        760
+      ],
+      "size": [
+        330,
+        60
+      ],
+      "flags": {},
+      "order": 27,
+      "mode": 2,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "CONTROL_NET",
+          "type": "CONTROL_NET",
+          "links": [
+            29
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ControlNetLoader"
+      },
+      "title": "ControlNet model (muted — wire to #30 when ready)",
+      "widgets_values": [
+        "put_your_controlnet.safetensors"
+      ]
+    },
+    {
+      "id": 30,
+      "type": "DeforumControlNetApply",
+      "pos": [
+        1980,
+        760
+      ],
+      "size": [
+        360,
+        130
+      ],
+      "flags": {},
+      "order": 28,
+      "mode": 2,
+      "inputs": [
+        {
+          "name": "conditioning",
+          "type": "CONDITIONING",
+          "link": null
+        },
+        {
+          "name": "control_net",
+          "type": "CONTROL_NET",
+          "link": 29
+        },
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": null,
+          "shape": 7
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "links": null,
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "DeforumControlNetApply"
+      },
+      "title": "Apply ControlNet (muted — needs CONDITIONING from CLIPTextEncode + KSampler path)",
+      "widgets_values": [
+        1.0
+      ]
+    },
+    {
+      "id": 31,
+      "type": "Note",
+      "pos": [
+        1620,
+        840
+      ],
+      "size": [
+        730,
+        120
+      ],
+      "flags": {},
+      "order": 29,
+      "mode": 0,
+      "properties": {
+        "text": ""
+      },
+      "widgets_values": [
+        "CONTROLNET WIRING GUIDE\n#29 ControlNetLoader  →  loads the ControlNet model.\n#30 DeforumControlNetApply  →  conditioning input: CLIPTextEncode(CLIP→text) | control_net: #29 | image: LoadImage / Canny preprocessor\nOutput CONDITIONING feeds a DeforumKSampler (iterator path). ⚠️ Cannot inject into DeforumSingleSampleNode #9 — that node builds its own conditioning internally.\nIterator path: DeforumIteratorNode → DeforumConditioningBlendNode → #30 → DeforumKSampler → VAEDecode → output"
+      ],
+      "color": "#244",
+      "bgcolor": "#366"
     }
   ],
   "links": [
@@ -1040,14 +1322,6 @@
       3,
       0,
       4,
-      0,
-      "deforum_data"
-    ],
-    [
-      6,
-      4,
-      0,
-      5,
       0,
       "deforum_data"
     ],
@@ -1146,11 +1420,59 @@
       3,
       1,
       "STRING"
+    ],
+    [
+      24,
+      4,
+      0,
+      25,
+      0,
+      "deforum_data"
+    ],
+    [
+      25,
+      25,
+      0,
+      26,
+      0,
+      "deforum_data"
+    ],
+    [
+      26,
+      26,
+      0,
+      27,
+      0,
+      "deforum_data"
+    ],
+    [
+      27,
+      27,
+      0,
+      5,
+      0,
+      "deforum_data"
+    ],
+    [
+      28,
+      19,
+      0,
+      28,
+      0,
+      "IMAGE"
+    ],
+    [
+      29,
+      29,
+      0,
+      30,
+      1,
+      "CONTROL_NET"
     ]
   ],
   "groups": [
     {
-      "title": "QUICK PARAMETERS \u00b7 Z-Image Turbo \u00b7 960\u00d7544 \u00b7 euler/turbo \u00b7 8 steps \u00b7 smooth motion",
+      "title": "QUICK PARAMETERS · Z-Image Turbo · 960×544 · euler/turbo · 8 steps · smooth motion",
       "bounding": [
         5,
         475,
@@ -1158,6 +1480,26 @@
         820
       ],
       "color": "#264"
+    },
+    {
+      "title": "ALTERNATIVE ANIM TECHNIQUES (all disabled/bypassed — right-click → enable to activate)",
+      "bounding": [
+        370,
+        1085,
+        1160,
+        350
+      ],
+      "color": "#333"
+    },
+    {
+      "title": "CONTROLNET INFRASTRUCTURE (muted — see note #31 for wiring guide)",
+      "bounding": [
+        1600,
+        740,
+        760,
+        240
+      ],
+      "color": "#334"
     }
   ],
   "config": {},
